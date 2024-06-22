@@ -1,4 +1,4 @@
-package com.cyber.restory.presentation
+package com.cyber.restory.presentation.splash
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,11 +6,8 @@ import android.os.Handler
 import android.os.Looper
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.cyber.restory.R
-import com.cyber.restory.databinding.ActivityMainBinding
 import com.cyber.restory.databinding.ActivitySplashBinding
+import com.cyber.restory.presentation.MainActivity
 
 class SplashActivity : AppCompatActivity() {
     private val binding : ActivitySplashBinding by lazy { ActivitySplashBinding.inflate(layoutInflater) }
