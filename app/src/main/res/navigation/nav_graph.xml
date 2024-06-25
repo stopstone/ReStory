@@ -15,4 +15,9 @@
         android:name="com.cyber.restory.presentation.mission.MissionFragment"
         android:label="MissionFragment"
         tools:layout="@layout/fragment_mission" />
+    <fragment
+        android:id="@+id/navigation_mypage"
+        android:name="com.cyber.restory.presentation.mypage.MyPageFragment"
+        android:label="MyPageFragment"
+        tools:layout="@layout/fragment_mypage" />
 </navigation>
