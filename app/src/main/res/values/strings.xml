@@ -8,4 +8,5 @@
     <string name="label_mypage">마이페이지</string>
     <string name="label_subtitle">공간의 재발견, 리스토리</string>
     <string name="label_title">RE: STORY</string>
+    <string name="description_notification_image">미션 알림</string>
 </resources>
