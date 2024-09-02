@@ -3,4 +3,11 @@
     <dimen name="viewpager_item_width">318dp</dimen>
     <dimen name="viewpager_item_height">300dp</dimen>
     <dimen name="viewpager_item_margin">20dp</dimen>
+
+    <dimen name="collapsed_margin">16dp</dimen>
+    <dimen name="expanded_margin">32dp</dimen>
+
+    <dimen name="chip_icon_size">24dp</dimen>
+    <dimen name="chip_margin_end">6dp</dimen>
+    <dimen name="chip_stroke_width">1dp</dimen>
 </resources>

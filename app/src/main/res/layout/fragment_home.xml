@@ -1,76 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_vertical_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.05" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_vertical_end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.95" />
+        <TextView
+            android:id="@+id/tv_home_title_first"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="32dp"
+            android:ellipsize="end"
+            android:text="공간의 재발견,\n이런 재생공간 어때요?"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_home_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:letterSpacing="0.041"
-        android:text="@string/label_title"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/guideline_vertical_start"
-        app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cg_home_category"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="14dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_home_title_first"
+            app:selectionRequired="true"
+            app:singleSelection="true" />
 
-    <TextView
-        android:id="@+id/tv_home_subtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/label_subtitle"
-        android:textColor="#9D9D9D"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@id/tv_home_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_home_title" />
+        <!-- ImageView for article thumbnail -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_home_article_thumbnail"
+            android:layout_width="0dp"
+            android:layout_height="256dp"
+            android:layout_marginStart="20dp"
+            android:background="@color/gray_300"
+            app:layout_constraintEnd_toStartOf="@id/rv_home_article_thumbnail_list"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cg_home_category"
+            app:shapeAppearanceOverlay="@style/AppRoundedImage.Small" />
 
-    <ImageButton
-        android:id="@+id/btn_home_search"
-        style="@style/ImageButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/description_search_image"
-        android:src="@drawable/ic_search"
-        app:layout_constraintBottom_toBottomOf="@id/tv_home_subtitle"
-        app:layout_constraintEnd_toEndOf="@id/guideline_vertical_end"
-        app:layout_constraintTop_toTopOf="@id/tv_home_title" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_home_article_thumbnail_list"
+            android:layout_width="0dp"
+            android:layout_height="256dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="20dp"
+            android:background="@android:color/transparent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="@id/iv_home_article_thumbnail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/iv_home_article_thumbnail"
+            app:layout_constraintTop_toTopOf="@id/iv_home_article_thumbnail"
+            tools:listitem="@layout/item_article_thumbnail" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewpager_home_banner"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toTopOf="@id/iv_home_notification"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_home_subtitle" />
+        <View
+            android:id="@+id/view_gradient_overlay"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/gradient_overlay_vertical"
+            app:layout_constraintBottom_toBottomOf="@id/iv_home_article_thumbnail"
+            app:layout_constraintEnd_toEndOf="@id/iv_home_article_thumbnail"
+            app:layout_constraintStart_toStartOf="@id/iv_home_article_thumbnail"
+            app:layout_constraintTop_toTopOf="@id/iv_home_article_thumbnail" />
 
-    <ImageView
-        android:id="@+id/iv_home_notification"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginVertical="20dp"
-        android:background="@color/gray_300"
-        android:contentDescription="@string/description_notification_image"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/guideline_vertical_end"
-        app:layout_constraintStart_toStartOf="@id/guideline_vertical_start"
-        app:layout_constraintTop_toBottomOf="@id/viewpager_home_banner" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_home_thumbnail_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="12dp"
+            android:background="@android:color/transparent"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/tv_home_thumbnail_subtitle"
+            app:layout_constraintEnd_toEndOf="@id/iv_home_article_thumbnail"
+            app:layout_constraintStart_toStartOf="@id/iv_home_article_thumbnail"
+            tools:text="메인 타이틀" />
+
+        <TextView
+            android:id="@+id/tv_home_thumbnail_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@android:color/transparent"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/iv_home_article_thumbnail"
+            app:layout_constraintEnd_toEndOf="@id/iv_home_article_thumbnail"
+            app:layout_constraintStart_toStartOf="@id/iv_home_article_thumbnail"
+            tools:text="메인 타이틀" />
+
+
+        <TextView
+            android:id="@+id/tv_home_title_article"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="20dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="타이틀영역 제목이 길어지면 길어지면타이틀영역 제목이 길어지면 길어지면"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/iv_home_article_thumbnail"
+            app:layout_constraintTop_toBottomOf="@id/iv_home_article_thumbnail" />
+
+        <include
+            android:id="@+id/item_article"
+            layout="@layout/layout_item_article"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_home_title_article" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager_home_banner"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_article" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
