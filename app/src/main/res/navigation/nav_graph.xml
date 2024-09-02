@@ -9,10 +9,20 @@
         android:id="@+id/navigation_home"
         android:name="com.cyber.restory.presentation.home.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_home_to_event_banner"
+            app:destination="@id/navigation_event_banner" />
+        <action
+            android:id="@+id/action_home_to_detail"
+            app:destination="@id/navigation_detail" />
+        <action
+            android:id="@+id/action_home_to_article"
+            app:destination="@id/navigation_article" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_mission"
-        android:name="com.cyber.restory.presentation.mission.MissionFragment"
+        android:name="com.cyber.restory.presentation.location.LocationFragment"
         android:label="MissionFragment"
         tools:layout="@layout/fragment_mission" />
     <fragment
@@ -20,4 +30,23 @@
         android:name="com.cyber.restory.presentation.mypage.MyPageFragment"
         android:label="MyPageFragment"
         tools:layout="@layout/fragment_mypage" />
+    <fragment
+        android:id="@+id/navigation_event_banner"
+        android:name="com.cyber.restory.presentation.event.EventBannerFragment"
+        tools:layout="@layout/fragment_event_banner"
+        android:label="EventBannerFragment" />
+    <activity
+        android:id="@+id/navigation_detail"
+        tools:layout="@layout/activity_detail"
+        android:name="com.cyber.restory.presentation.detail.DetailActivity"
+        android:label="DetailActivity" >
+        <argument
+            android:name="post"
+            app:argType="com.cyber.restory.data.model.Post" />
+    </activity>
+    <activity
+        android:id="@+id/navigation_article"
+        android:name="com.cyber.restory.presentation.ArticleActivity"
+        android:label="activity_article"
+        tools:layout="@layout/activity_article" />
 </navigation>
