@@ -3,10 +3,12 @@
     <style name="Base.Theme.ReStory" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:windowLightStatusBar">true</item>
         <item name="android:background">@color/white</item>
+        <!-- 초기 상태바를 투명하게 설정 -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="Theme.ReStory" parent="Base.Theme.ReStory" />
-
     <style name="imageButtonStyle">@style/imageButtonStyle</style>
 </resources>
