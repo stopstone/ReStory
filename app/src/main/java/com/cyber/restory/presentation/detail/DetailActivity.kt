@@ -48,7 +48,7 @@ class DetailActivity : AppCompatActivity() {
         with(binding) {
             tvArticleDetailCategory.text = post.type
             articleDetailTitle.text = post.title
-            tvArticleDetailDescription.text = post.content
+            tvArticleDetailDescription.text = post.summary
             tvArticleDetailTime.text = post.duration
             tvArticleDetailTimeHoliday.text = "${post.holiday} 휴무"
             tvArticleDetailTelephone.text = post.telephone
@@ -58,10 +58,15 @@ class DetailActivity : AppCompatActivity() {
                 Glide.with(this@DetailActivity)
                     .load(post.postImages[0].imageUrl)
                     .into(ivArticleDetailImage)
+
+                Glide.with(this@DetailActivity)
+                    .load(post.postImages[1].imageUrl)
+                    .centerCrop()
+                    .into(ivArticleDetailBehindImage)
+                tvArticleDetailBehindText.text = post.content
             }
         }
     }
-
 
     private fun setupClickListeners() {
         with(binding) {
