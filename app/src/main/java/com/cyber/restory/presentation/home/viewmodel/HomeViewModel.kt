@@ -20,7 +20,6 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getFilterTypesUseCase: GetFilterTypesUseCase,
     private val getPostsUseCase: GetPostsUseCase,
-    private val getPostDetailUseCase: GetPostDetailUseCase
 ) : ViewModel() {
     private val _filterTypes = MutableStateFlow<List<FilterTypeResponse>>(emptyList())
     val filterTypes: StateFlow<List<FilterTypeResponse>> = _filterTypes.asStateFlow()
@@ -30,9 +29,6 @@ class HomeViewModel @Inject constructor(
 
     private val _posts = MutableStateFlow<List<Post>>(emptyList())
     val posts: StateFlow<List<Post>> = _posts.asStateFlow()
-
-    private val _selectedPost = MutableStateFlow<Post?>(null)
-    val selectedPost: StateFlow<Post?> = _selectedPost.asStateFlow()
 
     private val _currentThumbnailPost = MutableStateFlow<Post?>(null)
     val currentThumbnailPost: StateFlow<Post?> = _currentThumbnailPost.asStateFlow()
@@ -95,20 +91,6 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-
-    fun getPostDetail(id: Int) {
-        viewModelScope.launch {
-            try {
-                Log.d("HomeViewModel", "게시글 상세 정보 요청 시작: id=$id")
-                val post = getPostDetailUseCase(id)
-                _selectedPost.value = post
-                Log.d("HomeViewModel", "게시글 상세 정보 요청 성공: ${post.title}")
-            } catch (e: Exception) {
-                Log.e("HomeViewModel", "게시글 상세 정보 요청 실패: ${e.message}")
-            }
-        }
-    }
-
     fun setCurrentThumbnailPost(post: Post) {
         _currentThumbnailPost.value = post
     }

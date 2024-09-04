@@ -112,15 +112,6 @@ class HomeFragment : Fragment() {
                         }
                     }
                 }
-
-                launch {
-                    viewModel.selectedPost.collect { post ->
-                        post?.let {
-                            val action = HomeFragmentDirections.actionHomeToDetail(it)
-                            findNavController().navigate(action)
-                        }
-                    }
-                }
             }
         }
     }
@@ -211,7 +202,8 @@ class HomeFragment : Fragment() {
         binding.tvHomeThumbnailSubtitle.text = post.subContent
 
         binding.ivHomeArticleThumbnail.setOnClickListener {
-            viewModel.getPostDetail(post.id)
+            val action = HomeFragmentDirections.actionHomeToDetail(post.id)
+            findNavController().navigate(action)
         }
     }
 }

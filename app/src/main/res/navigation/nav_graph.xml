@@ -41,8 +41,8 @@
         android:name="com.cyber.restory.presentation.detail.DetailActivity"
         android:label="DetailActivity" >
         <argument
-            android:name="post"
-            app:argType="com.cyber.restory.data.model.Post" />
+            android:name="postId"
+            app:argType="integer" />
     </activity>
     <activity
         android:id="@+id/navigation_article"

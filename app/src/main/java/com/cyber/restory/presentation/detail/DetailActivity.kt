@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Lifecycle
@@ -14,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.cyber.restory.R
 import com.cyber.restory.data.model.Post
 import com.cyber.restory.databinding.ActivityDetailBinding
+import com.cyber.restory.presentation.detail.viewmodel.DetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -24,14 +26,22 @@ class DetailActivity : AppCompatActivity() {
             layoutInflater
         )
     }
+    private val viewModel: DetailViewModel by viewModels()
     private val args: DetailActivityArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
+        viewModel.getPostDetail(args.postId)
         setupClickListeners()
-        updateUI(args.post)
+
+        lifecycleScope.launch {
+            viewModel.postDetail.collect { post ->
+                if (post != null) {
+                    updateUI(post)
+                }
+            }
+        }
     }
 
     private fun updateUI(post: Post) {
