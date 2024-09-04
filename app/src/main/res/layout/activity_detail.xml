@@ -238,15 +238,26 @@
                 tools:text="앤트러사이트 합정은 멈춰진 신발 공장에 시간을 담아내고, 커피향이 가득한 공간재생 카페의 첫 시작입니다.  조도를 낮추고 시간의 명암을 만들어 과거와 현재가 공존하는 이 공간은 변화와 기억을 엮어, 특별한 경험을 선사합니다." />
 
             <TextView
+                android:id="@+id/tv_article_detail_map_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 android:text="지도"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:layout_marginTop="32dp"
                 app:layout_constraintStart_toStartOf="@id/tv_article_detail_behind_text"
-                app:layout_constraintTop_toBottomOf="@id/tv_article_detail_behind_text"
-                />
+                app:layout_constraintTop_toBottomOf="@id/tv_article_detail_behind_text" />
+
+            <com.kakao.vectormap.MapView
+                android:id="@+id/map_view"
+                android:layout_width="0dp"
+                android:layout_height="220dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/gray_300"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_article_detail_map_label"
+                app:layout_constraintTop_toBottomOf="@id/tv_article_detail_map_label" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -28,6 +28,12 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "API_URL", "\"${properties["API_URL"]}\"")
+        buildConfigField("String", "API_KEY", "\"${properties["kakaoapi.key"]}\"")
+
+        val kakaoApiKey = properties["kakaoapi.key"] as String
+        manifestPlaceholders["KAKAO_API_KEY"] = kakaoApiKey
+
+
     }
 
     buildTypes {
@@ -59,6 +65,9 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+    // Kakao Map
+    implementation ("com.kakao.maps.open:android:2.11.9")
 
     // Hilt
     implementation ("com.google.dagger:hilt-android:2.51.1")
