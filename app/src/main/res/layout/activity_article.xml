@@ -68,7 +68,8 @@
                 android:text="아티클"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                app:drawableStartCompat="@drawable/ic_image_load"
+                android:drawablePadding="3dp"
+                app:drawableStartCompat="@drawable/ic_article"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -81,6 +82,7 @@
                 android:paddingVertical="4dp"
                 android:text="공유"
                 android:textSize="12sp"
+                android:drawablePadding="3dp"
                 app:drawableEndCompat="@drawable/ic_share"
                 app:layout_constraintBottom_toBottomOf="@id/tv_article_detail_category"
                 app:layout_constraintEnd_toEndOf="parent"

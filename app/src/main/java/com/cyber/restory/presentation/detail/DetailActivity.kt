@@ -1,10 +1,14 @@
 package com.cyber.restory.presentation.detail
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -82,6 +86,8 @@ class DetailActivity : AppCompatActivity() {
             tvArticleDetailTimeHoliday.text = "${post.holiday} 휴무"
             tvArticleDetailTelephone.text = post.telephone
             tvArticleDetailHomepage.text = post.url
+            tvArticleDetailMapText.text = post.address
+            tvArticleDetailBehindText.text = post.content
 
             if (post.postImages.isNotEmpty()) {
                 Glide.with(this@DetailActivity)
@@ -92,7 +98,6 @@ class DetailActivity : AppCompatActivity() {
                     .load(post.postImages[1].imageUrl)
                     .centerCrop()
                     .into(ivArticleDetailBehindImage)
-                tvArticleDetailBehindText.text = post.content
             }
         }
     }
@@ -118,6 +123,10 @@ class DetailActivity : AppCompatActivity() {
 
             toolbar.setNavigationOnClickListener {
                 finish()
+            }
+
+            btnArticleDetailMapCopy.setOnClickListener {
+                copyTextToClipboard(tvArticleDetailMapText.text.toString())
             }
         }
     }
@@ -162,4 +171,12 @@ class DetailActivity : AppCompatActivity() {
         super.onDestroy()
         mapView?.finish()
     }
+
+    private fun copyTextToClipboard(text: String) {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("Copied Text", text)
+        clipboard.setPrimaryClip(clip)
+        Toast.makeText(this, "클립보드에 저장 되었습니다.", Toast.LENGTH_SHORT).show()
+    }
+
 }

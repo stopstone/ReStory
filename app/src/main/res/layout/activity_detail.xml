@@ -62,13 +62,13 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/background_gray_fill"
+                android:drawablePadding="3dp"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_article"
-                android:drawablePadding="3dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -77,10 +77,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/background_button_stroke"
+                android:drawablePadding="3dp"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="4dp"
                 android:text="공유"
-                android:drawablePadding="3dp"
                 android:textSize="12sp"
                 app:drawableEndCompat="@drawable/ic_share"
                 app:layout_constraintBottom_toBottomOf="@id/tv_article_detail_category"
@@ -258,6 +258,27 @@
                 app:drawableStartCompat="@drawable/ic_map"
                 app:layout_constraintStart_toStartOf="@id/tv_article_detail_behind_text"
                 app:layout_constraintTop_toBottomOf="@id/tv_article_detail_behind_text" />
+
+            <TextView
+                android:id="@+id/tv_article_detail_map_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_article_detail_map_label"
+                app:layout_constraintStart_toEndOf="@id/tv_article_detail_map_label"
+                app:layout_constraintTop_toTopOf="@id/tv_article_detail_map_label"
+                tools:text="00시 00구 00로 123번길 00, 12345" />
+
+            <ImageButton
+                android:id="@+id/btn_article_detail_map_copy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_copy"
+                app:layout_constraintBottom_toBottomOf="@id/tv_article_detail_map_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_article_detail_map_text"
+                app:layout_constraintTop_toTopOf="@id/tv_article_detail_map_text" />
 
             <com.kakao.vectormap.MapView
                 android:id="@+id/map_view"
