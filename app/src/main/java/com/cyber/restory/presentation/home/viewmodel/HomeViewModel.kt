@@ -43,7 +43,10 @@ class HomeViewModel @Inject constructor(
                 Log.d("HomeViewModel", "필터 타입 가져오기 시작")
                 val types = getFilterTypesUseCase()
                 _filterTypes.value = types
-                Log.d("HomeViewModel", "가져온 필터 타입: ${types.joinToString { "코드: ${it.code}, 설명: ${it.description}" }}")
+                Log.d(
+                    "HomeViewModel",
+                    "가져온 필터 타입: ${types.joinToString { "코드: ${it.code}, 설명: ${it.description}" }}"
+                )
                 if (types.isNotEmpty() && _selectedFilterType.value == null) {
                     selectFilterType(types.first())
                 }
@@ -59,22 +62,16 @@ class HomeViewModel @Inject constructor(
         getPosts(filterType.code, resetPage = true)
     }
 
-    private fun getPosts(category: String, resetPage: Boolean = false) {
+    private fun getPosts(type: String, resetPage: Boolean = false) {
         if (resetPage) {
             currentPage = 1
         }
 
         viewModelScope.launch {
             try {
-                val postRequest = PostRequest(
-                    category = category,
-                    size = pageSize,
-                    page = currentPage
-                )
+                Log.d("HomeViewModel", "게시글 요청 시작: 타입=$type, 페이지=$currentPage, 사이즈=$pageSize")
 
-                Log.d("HomeViewModel", "게시글 요청 시작: 카테고리=$category, 페이지=$currentPage, 사이즈=$pageSize")
-
-                val result = getPostsUseCase(postRequest)
+                val result = getPostsUseCase(type, pageSize, currentPage)
 
                 Log.d("HomeViewModel", "게시글 요청 성공: 총 ${result.count}개의 게시글")
                 Log.d("HomeViewModel", "받은 게시글 목록: ${result.data.joinToString { it.title }}")

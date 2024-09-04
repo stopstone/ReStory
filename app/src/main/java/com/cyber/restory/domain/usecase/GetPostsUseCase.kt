@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetPostsUseCase @Inject constructor(
     private val postRepository: PostRepository
 ) {
-    suspend operator fun invoke(postRequest: PostRequest): PostResponse {
-        return postRepository.getPosts(postRequest)
+    suspend operator fun invoke(type: String, size: Int, page: Int): PostResponse {
+        return postRepository.getPosts(type, size, page)
     }
 }

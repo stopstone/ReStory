@@ -14,7 +14,11 @@ interface ApiClient {
     suspend fun getFilterTypes(): List<FilterTypeResponse>
 
     @GET("posts")
-    suspend fun getPosts(@Query("postRequest") postRequest: PostRequest): PostResponse
+    suspend fun getPosts(
+        @Query("type") type: String,
+        @Query("size") size: Int,
+        @Query("page") page: Int
+    ): PostResponse
 
     @GET("posts/{id}")
     suspend fun getPostDetail(@Path("id") id: Int): Post

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
@@ -179,18 +180,23 @@ class HomeFragment : Fragment() {
     private fun updatePostsUI(posts: List<Post>) {
         Log.d("HomeFragment", "포스트 UI 업데이트 시작")
         if (posts.isNotEmpty()) {
-            val post = posts[0]
-            updateMainThumbnail(post.postImages[0])
+            try {
+                val post = posts[0]
+                updateMainThumbnail(post.postImages[0])
 
-            binding.tvHomeThumbnailTitle.text = post.title
-            binding.tvHomeThumbnailSubtitle.text = post.subContent
 
-            binding.ivHomeArticleThumbnail.setOnClickListener {
-                viewModel.getPostDetail(post.id)
+                binding.tvHomeThumbnailTitle.text = post.title
+                binding.tvHomeThumbnailSubtitle.text = post.subContent
+
+                binding.ivHomeArticleThumbnail.setOnClickListener {
+                    viewModel.getPostDetail(post.id)
+                }
+
+                // 썸네일 리스트 업데이트
+                thumbnailAdapter.submitList(post.postImages)
+            } catch (e: IndexOutOfBoundsException) {
+                Toast.makeText(requireContext(), "포스트가 없습니다.", Toast.LENGTH_SHORT).show()
             }
-
-            // 썸네일 리스트 업데이트
-            thumbnailAdapter.submitList(post.postImages)
         }
         Log.d("HomeFragment", "포스트 UI 업데이트 완료")
     }
