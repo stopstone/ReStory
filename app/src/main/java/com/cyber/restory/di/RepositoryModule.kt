@@ -1,8 +1,10 @@
 package com.cyber.restory.di
 
 import com.cyber.restory.data.api.ApiClient
+import com.cyber.restory.data.repository.CityRepositoryImpl
 import com.cyber.restory.data.repository.FilterRepositoryImpl
 import com.cyber.restory.data.repository.PostRepositoryImpl
+import com.cyber.restory.domain.repository.CityRepository
 import com.cyber.restory.domain.repository.FilterRepository
 import com.cyber.restory.domain.repository.PostRepository
 import dagger.Module
@@ -26,4 +28,9 @@ object RepositoryModule {
         return FilterRepositoryImpl(filterApi)
     }
 
+    @Provides
+    @Singleton
+    fun provideCityRepository(apiService: ApiClient): CityRepository {
+        return CityRepositoryImpl(apiService)
+    }
 }

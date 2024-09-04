@@ -32,31 +32,25 @@ class RegionSelectorView @JvmOverloads constructor(
         binding.btnSelector.setOnClickListener {
             toggleExpanded()
         }
-
-        adapter.submitList(getRegions())
     }
 
     private fun toggleExpanded() {
         isExpanded = !isExpanded
         binding.rvRegions.visibility = if (isExpanded) View.VISIBLE else View.GONE
         binding.btnSelector.text = if (isExpanded) "접기" else "지역 선택"
+        Log.d("RegionSelectorView", "토글 상태 변경: ${if (isExpanded) "펼침" else "접음"}")
     }
 
     private fun onRegionSelected(region: Region) {
         binding.btnSelector.text = region.name
         toggleExpanded()
-        Log.d("RegionSelector", "Selected region: ${region.name}")
+        Log.d("RegionSelectorView", "선택된 지역: ${region.name}")
     }
 
-    private fun getRegions(): List<Region> {
-        return listOf(
-            Region("서울", 15), Region("경기", 8), Region("부산", 2), Region("제주"),
-            Region("거제시"), Region("통영시"), Region("사천시"), Region("밀양시"),
-            Region("함안군"), Region("거창군"), Region("창녕군"), Region("고성군"),
-            Region("하동군"), Region("함천군"), Region("남해군"), Region("함양군"),
-            Region("신청군"), Region("의령군")
-        )
+    fun setRegions(regions: List<Region>) {
+        adapter.submitList(regions)
+        Log.d("RegionSelectorView", "지역 목록 설정 완료. 총 ${regions.size}개의 지역")
     }
 }
 
-data class Region(val name: String, val count: Int = 0)
+data class Region(val code: String, val name: String)

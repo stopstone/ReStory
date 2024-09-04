@@ -1,5 +1,6 @@
 package com.cyber.restory.data.api
 
+import com.cyber.restory.data.model.CityFilterResponse
 import com.cyber.restory.data.model.FilterTypeResponse
 import com.cyber.restory.data.model.Post
 import com.cyber.restory.data.model.PostRequest
@@ -22,4 +23,7 @@ interface ApiClient {
 
     @GET("posts/{id}")
     suspend fun getPostDetail(@Path("id") id: Int): Post
+
+    @GET("filters/city")
+    suspend fun getCityFilters(): List<CityFilterResponse>
 }
