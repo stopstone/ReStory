@@ -34,6 +34,9 @@ class HomeViewModel @Inject constructor(
     private val _selectedPost = MutableStateFlow<Post?>(null)
     val selectedPost: StateFlow<Post?> = _selectedPost.asStateFlow()
 
+    private val _currentThumbnailPost = MutableStateFlow<Post?>(null)
+    val currentThumbnailPost: StateFlow<Post?> = _currentThumbnailPost.asStateFlow()
+
     private var currentPage = 1
     private val pageSize = 10 // 한 페이지당 게시글 수
 
@@ -82,6 +85,10 @@ class HomeViewModel @Inject constructor(
                     _posts.value += result.data
                 }
 
+                if (_currentThumbnailPost.value == null && result.data.isNotEmpty()) {
+                    setCurrentThumbnailPost(result.data.first())
+                }
+
                 currentPage++
             } catch (e: Exception) {
                 Log.e("HomeViewModel", "게시글 요청 실패: ${e.message}")
@@ -102,4 +109,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun setCurrentThumbnailPost(post: Post) {
+        _currentThumbnailPost.value = post
+    }
 }

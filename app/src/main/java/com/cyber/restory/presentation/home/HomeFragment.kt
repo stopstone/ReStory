@@ -35,8 +35,8 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
     private val thumbnailAdapter: ArticleThumbnailAdapter by lazy {
-        ArticleThumbnailAdapter { postImage ->
-            updateMainThumbnail(postImage)
+        ArticleThumbnailAdapter { post ->
+            updateMainThumbnail(post)
         }
     }
 
@@ -89,23 +89,27 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.filterTypes.collect { filterTypes ->
-                        Log.d("HomeFragment", "필터 타입 업데이트: ${filterTypes.size}개의 타입")
-                        createFilterChips(filterTypes)
+                    viewModel.filterTypes.collect { types ->
+                        createFilterChips(types)
                     }
                 }
-
                 launch {
                     viewModel.selectedFilterType.collect { selectedType ->
-                        Log.d("HomeFragment", "선택된 필터 타입: ${selectedType?.description}")
                         updateSelectedChip(selectedType)
                     }
                 }
-
                 launch {
                     viewModel.posts.collect { posts ->
                         Log.d("HomeFragment", "포스트 업데이트: ${posts.size}개의 포스트")
                         updatePostsUI(posts)
+                    }
+                }
+
+                launch {
+                    viewModel.currentThumbnailPost.collect { post ->
+                        post?.let {
+                            updateMainThumbnail(it)
+                        }
                     }
                 }
 
@@ -149,8 +153,14 @@ class HomeFragment : Fragment() {
                 setTextAppearanceResource(R.style.Colors_Widget_MaterialComponents_Chip_Choice)
 
                 // 배경 및 테두리 설정
-                chipBackgroundColor = ContextCompat.getColorStateList(context, R.color.color_choice_chip_background_color)
-                chipStrokeColor = ContextCompat.getColorStateList(context, R.color.color_choice_chip_strokecolor_selector)
+                chipBackgroundColor = ContextCompat.getColorStateList(
+                    context,
+                    R.color.color_choice_chip_background_color
+                )
+                chipStrokeColor = ContextCompat.getColorStateList(
+                    context,
+                    R.color.color_choice_chip_strokecolor_selector
+                )
                 chipStrokeWidth = resources.getDimension(R.dimen.chip_stroke_width)
 
                 // 마진 설정
@@ -180,35 +190,28 @@ class HomeFragment : Fragment() {
     private fun updatePostsUI(posts: List<Post>) {
         Log.d("HomeFragment", "포스트 UI 업데이트 시작")
         if (posts.isNotEmpty()) {
-            try {
-                val post = posts[0]
-                updateMainThumbnail(post.postImages[0])
+            val firstPost = posts.first()
+            viewModel.setCurrentThumbnailPost(firstPost)
 
-
-                binding.tvHomeThumbnailTitle.text = post.title
-                binding.tvHomeThumbnailSubtitle.text = post.subContent
-
-                binding.ivHomeArticleThumbnail.setOnClickListener {
-                    viewModel.getPostDetail(post.id)
-                }
-
-                // 썸네일 리스트 업데이트
-                thumbnailAdapter.submitList(post.postImages)
-            } catch (e: IndexOutOfBoundsException) {
-                Toast.makeText(requireContext(), "포스트가 없습니다.", Toast.LENGTH_SHORT).show()
-            }
+            // 썸네일 리스트 업데이트
+            thumbnailAdapter.submitList(posts)
+        } else {
+            Toast.makeText(requireContext(), "포스트가 없습니다.", Toast.LENGTH_SHORT).show()
         }
         Log.d("HomeFragment", "포스트 UI 업데이트 완료")
     }
 
-    private fun updateMainThumbnail(postImage: PostImage) {
+    private fun updateMainThumbnail(post: Post) {
         Glide.with(this@HomeFragment)
-            .load(postImage.imageUrl)
+            .load(post.postImages.firstOrNull()?.imageUrl)
             .centerCrop()
             .into(binding.ivHomeArticleThumbnail)
 
-        // 타이틀과 서브타이틀 업데이트
-        binding.tvHomeThumbnailTitle.text = postImage.description
-        binding.tvHomeThumbnailSubtitle.text = "" // PostImage에 서브타이틀 정보가 없다면 비워둡니다.
+        binding.tvHomeThumbnailTitle.text = post.title
+        binding.tvHomeThumbnailSubtitle.text = post.subContent
+
+        binding.ivHomeArticleThumbnail.setOnClickListener {
+            viewModel.getPostDetail(post.id)
+        }
     }
 }

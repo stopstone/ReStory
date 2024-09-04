@@ -6,12 +6,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.cyber.restory.data.model.Post
 import com.cyber.restory.data.model.PostImage
 import com.cyber.restory.databinding.ItemArticleThumbnailBinding
 
 class ArticleThumbnailAdapter(
-    private val onItemClick: (PostImage) -> Unit
-) : ListAdapter<PostImage, ArticleThumbnailAdapter.ViewHolder>(DiffCallback()) {
+    private val onItemClick: (Post) -> Unit
+) : ListAdapter<Post, ArticleThumbnailAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemArticleThumbnailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -24,27 +25,26 @@ class ArticleThumbnailAdapter(
 
     class ViewHolder(
         private val binding: ItemArticleThumbnailBinding,
-        private val onItemClick: (PostImage) -> Unit
+        private val onItemClick: (Post) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(postImage: PostImage) {
+        fun bind(post: Post) {
             Glide.with(binding.root)
-                .load(postImage.imageUrl)
+                .load(post.postImages.firstOrNull()?.imageUrl)
                 .centerCrop()
                 .into(binding.ivArticleThumbnail)
 
             binding.root.setOnClickListener {
-                onItemClick(postImage)
+                onItemClick(post)
             }
         }
     }
 
-
-    private class DiffCallback : DiffUtil.ItemCallback<PostImage>() {
-        override fun areItemsTheSame(oldItem: PostImage, newItem: PostImage): Boolean {
+    private class DiffCallback : DiffUtil.ItemCallback<Post>() {
+        override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: PostImage, newItem: PostImage): Boolean {
+        override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
             return oldItem == newItem
         }
     }
