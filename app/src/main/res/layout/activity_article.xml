@@ -61,14 +61,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/background_gray_fill"
+                android:background="@drawable/background_fill_gray_200"
+                android:drawablePadding="3dp"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
                 android:text="아티클"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:drawablePadding="3dp"
                 app:drawableStartCompat="@drawable/ic_article"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -78,11 +78,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/background_button_stroke"
+                android:drawablePadding="3dp"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="4dp"
                 android:text="공유"
                 android:textSize="12sp"
-                android:drawablePadding="3dp"
                 app:drawableEndCompat="@drawable/ic_share"
                 app:layout_constraintBottom_toBottomOf="@id/tv_article_detail_category"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -94,43 +94,195 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="12dp"
-                android:text="재생공간 왜 필요할까요?"
-                android:textSize="18sp"
+                android:text="재생공간,\n왜 필요할까요?"
+                android:textSize="29sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_article_detail_category" />
 
             <TextView
-                android:id="@+id/tv_article_detail_create_date"
+                android:id="@+id/tv_article_detail_create_subtitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="2024.07.20"
+                android:text="리스토리 · 2024.07.20"
                 android:textColor="@color/gray_400"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="@id/article_detail_title"
                 app:layout_constraintStart_toStartOf="@id/article_detail_title"
                 app:layout_constraintTop_toBottomOf="@id/article_detail_title" />
 
-            <TextView
-                android:id="@+id/tv_article_detail_description_first"
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/divider_top"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:text="@string/article_content_text_first"
+                android:layout_marginTop="6dp"
+                app:dividerColor="@color/gray_150"
+                app:dividerInsetEnd="20dp"
+                app:dividerInsetStart="20dp"
+                app:dividerThickness="0.5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_article_detail_create_date" />
+                app:layout_constraintTop_toBottomOf="@id/tv_article_detail_create_subtitle" />
 
             <TextView
-                android:id="@+id/tv_article_detail_description_second"
+                android:id="@+id/tv_article_detail_section_first"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/background_fill_gray_500"
+                android:padding="6dp"
+                android:text="02"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/divider_top"
+                app:layout_constraintTop_toBottomOf="@id/divider_top" />
+
+            <TextView
+                android:id="@+id/tv_article_detail_section_first_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="재생공간은\n무엇일까요?"
+                android:textColor="@color/gray_500"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/tv_article_detail_section_first"
+                app:layout_constraintTop_toTopOf="@+id/tv_article_detail_section_first" />
+
+            <TextView
+                android:id="@+id/tv_article_detail_section_first_content"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="@string/article_content_text_second"
-                app:layout_constraintEnd_toEndOf="@id/tv_article_detail_description_first"
-                app:layout_constraintStart_toStartOf="@id/tv_article_detail_description_first"
-                app:layout_constraintTop_toBottomOf="@id/tv_article_detail_description_first" />
+                android:layout_marginEnd="20dp"
+                android:text="재생공간이란, 노후화된 지역이나 방치된 공간을 새롭게 변모시켜, 도시의 다양한 문제를 해결하고 더 나은 미래를 위한 기반을 마련하는 것을 의미해요."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_article_detail_section_first_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_article_detail_section_first_title" />
+
+            <ImageView
+                android:id="@+id/iv_article_detail_section_first_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/article_content_image1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_article_detail_section_first_content" />
+
+            <TextView
+                android:id="@+id/tv_article_detail_section_second"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/background_fill_gray_500"
+                android:padding="6dp"
+                android:text="01"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/divider_top"
+                app:layout_constraintTop_toBottomOf="@id/iv_article_detail_section_first_image" />
+
+            <TextView
+                android:id="@+id/tv_article_detail_section_second_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="재생공간은\n무엇일까요?"
+                android:textColor="@color/gray_500"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/tv_article_detail_section_second"
+                app:layout_constraintTop_toTopOf="@+id/tv_article_detail_section_second" />
+
+            <TextView
+                android:id="@+id/tv_article_detail_section_second_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="20dp"
+                android:text="현대에는 공간들이 빠르게 발전하며 성장 불균형, 환경 오염같은 문제를 겪고 있어요. 낙후되어 빈 공간들도 많이 생겼고요.\n\n이러한 문제들은 시민들의 삶의 질을 저하시킬 뿐만 아니라, 장기적으로 도시의 지속 가능성을 위협해요.
+이 문제들을 해결하고 지속 가능한 성장을 위해 등장한 개념이 바로 ‘재생공간’이에요."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_article_detail_section_second_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_article_detail_section_second_title" />
+
+            <ImageView
+                android:id="@+id/iv_article_detail_section_second_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/article_content_image2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_article_detail_section_second_content" />
+
+            <TextView
+                android:id="@+id/tv_article_detail_section_third"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/background_fill_gray_500"
+                android:padding="6dp"
+                android:text="03"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/divider_top"
+                app:layout_constraintTop_toBottomOf="@id/iv_article_detail_section_second_image" />
+
+            <TextView
+                android:id="@+id/tv_article_detail_section_third_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="재생공간은\n무엇일까요?"
+                android:textColor="@color/gray_500"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/tv_article_detail_section_third"
+                app:layout_constraintTop_toTopOf="@+id/tv_article_detail_section_third" />
+
+            <TextView
+                android:id="@+id/tv_article_detail_section_third_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="20dp"
+                android:text=" 재생공간은 낡고 방치된 공간을 현대적이고 기능적으로 탈바꿈시키는 것을 목표로 해요. 공공의 이익을 증대시키고, 지역 사회의 삶의 질을 높이며, 환경적으로 지속 가능한 발전을 도모할 수 있어요.\n\n 그럼 재생공간에 대해 잘 알아보셨나요?  앞으로도 볼거리, 즐길거리가 많은 대표적 재생공간들을 여러분께 소개시켜드릴게요!"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_article_detail_section_third_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_article_detail_section_third_title" />
+
+            <ImageView
+                android:id="@+id/iv_article_detail_section_third_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/article_content_image3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_article_detail_section_third_content" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/divider_bottom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                app:dividerColor="@color/gray_150"
+                app:dividerInsetEnd="20dp"
+                app:dividerInsetStart="20dp"
+                app:dividerThickness="0.5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_article_detail_section_third_image"
+                app:layout_goneMarginTop="32dp" />
 
             <TextView
                 android:id="@+id/tv_article_detail_more_article_label"
@@ -143,7 +295,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_article_detail_description_second" />
+                app:layout_constraintTop_toBottomOf="@id/divider_bottom" />
 
             <TextView
                 android:id="@+id/tv_article_detail_more_article"
