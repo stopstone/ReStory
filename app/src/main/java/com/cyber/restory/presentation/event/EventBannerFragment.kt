@@ -21,6 +21,7 @@ import com.cyber.restory.R
 import com.cyber.restory.databinding.FragmentEventBannerBinding
 import com.cyber.restory.presentation.custom.Region
 import com.cyber.restory.presentation.event.adapter.EventBannerAdapter
+import com.cyber.restory.presentation.event.adapter.PublicApiAdapter
 import com.cyber.restory.presentation.event.adapter.RegionAdapter
 import com.cyber.restory.presentation.event.viewModel.EventBannerViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +33,8 @@ class EventBannerFragment : Fragment() {
     private val binding get() = _binding!!
     private val eventBannerAdapter: EventBannerAdapter by lazy { EventBannerAdapter() }
     private val regionAdapter: RegionAdapter by lazy { RegionAdapter(::onRegionSelected) }
+    private val publicApiAdapter: PublicApiAdapter by lazy { PublicApiAdapter() }
+
     private val viewModel: EventBannerViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -56,14 +59,23 @@ class EventBannerFragment : Fragment() {
     private fun setLayout() {
         Log.d("EventBannerFragment", "레이아웃 설정 시작")
         with(binding) {
-            tvEventBannerTitle.text = createColoredRegionText("서울")
             setEventBannerRecyclerView()
             setRegionRecyclerView()
+            setPublicApiRecyclerView()  // 추가
             btnRegionSelector.text = "지역 목록"
             btnRegionSelector.setOnClickListener { toggleRegionList() }
             rvRegionList.visibility = View.GONE
         }
         Log.d("EventBannerFragment", "레이아웃 설정 완료")
+    }
+
+    private fun setPublicApiRecyclerView() {
+        Log.d("EventBannerFragment", "공공 API RecyclerView 설정 시작")
+        with(binding.rvEventBannerList) {
+            adapter = publicApiAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+        Log.d("EventBannerFragment", "공공 API RecyclerView 설정 완료")
     }
 
     private fun setEventBannerRecyclerView() {
@@ -91,7 +103,7 @@ class EventBannerFragment : Fragment() {
         val startIndex = 0
         val endIndex = region.length
         spannableString.setSpan(
-            ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.blue_500)),
+            ForegroundColorSpan(getColor(requireContext(), R.color.blue_500)),
             startIndex,
             endIndex,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -104,11 +116,35 @@ class EventBannerFragment : Fragment() {
         Log.d("EventBannerFragment", "ViewModel 관찰 시작")
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.cityFilters.collect { regions ->
-                    Log.d("EventBannerFragment", "새로운 지역 목록 수신: ${regions.size}개의 지역")
-                    regionAdapter.submitList(regions)
-                    regions.find { it.name == "서울" }?.let { seoul ->
-                        regionAdapter.setSelectedRegion(seoul)
+                launch {
+                    viewModel.cityFilters.collect { regions ->
+                        Log.d("EventBannerFragment", "새로운 지역 목록 수신: ${regions.size}개의 지역")
+                        regionAdapter.submitList(regions)
+                    }
+                }
+
+                launch {
+                    viewModel.selectedRegion.collect { region ->
+                        region?.let {
+                            Log.d("EventBannerFragment", "선택된 지역 변경: ${it.name}")
+                            binding.tvEventBannerTitle.text = createColoredRegionText(it.name)
+                            regionAdapter.setSelectedRegion(it)
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.greenTourInfo.collect { response ->
+                        response?.let {
+                            Log.d("EventBannerFragment", "새로운 녹색 관광 정보 수신")
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.filteredGreenTourItems.collect { items ->
+                        Log.d("EventBannerFragment", "필터링된 녹색 관광 정보 수신: ${items.size}개 항목")
+                        publicApiAdapter.submitList(items)
                     }
                 }
             }
@@ -127,9 +163,8 @@ class EventBannerFragment : Fragment() {
     }
 
     private fun onRegionSelected(region: Region) {
-        binding.tvEventBannerTitle.text = createColoredRegionText(region.name)
         toggleRegionList()
         Log.d("EventBannerFragment", "선택된 지역: ${region.name}")
-        // TODO: 선택된 지역에 따라 이벤트 배너 업데이트
+        viewModel.setSelectedRegion(region)
     }
 }

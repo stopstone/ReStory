@@ -29,6 +29,7 @@ android {
 
         buildConfigField("String", "API_URL", "\"${properties["API_URL"]}\"")
         buildConfigField("String", "API_KEY", "\"${properties["kakaoapi.key"]}\"")
+        buildConfigField("String", "GREEN_TOUR_API_KEY", "\"${properties["greentour.key"]}\"")
 
         val kakaoApiKey = properties["kakaoapi.key"] as String
         manifestPlaceholders["KAKAO_API_KEY"] = kakaoApiKey
@@ -98,6 +99,7 @@ dependencies {
 
     // Glide
     implementation("com.github.bumptech.glide:glide:4.11.0")
+    kapt("com.github.bumptech.glide:compiler:4.11.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
