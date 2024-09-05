@@ -34,7 +34,12 @@
         android:id="@+id/navigation_event_banner"
         android:name="com.cyber.restory.presentation.event.EventBannerFragment"
         tools:layout="@layout/fragment_event_banner"
-        android:label="EventBannerFragment" />
+        android:label="EventBannerFragment" >
+        <argument
+            android:name="bannerPosition"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
     <activity
         android:id="@+id/navigation_detail"
         tools:layout="@layout/activity_detail"

@@ -19,7 +19,6 @@ import com.bumptech.glide.Glide
 import com.cyber.restory.R
 import com.cyber.restory.data.model.FilterTypeResponse
 import com.cyber.restory.data.model.Post
-import com.cyber.restory.data.model.PostImage
 import com.cyber.restory.databinding.FragmentHomeBinding
 import com.cyber.restory.presentation.home.adapter.ArticleThumbnailAdapter
 import com.cyber.restory.presentation.home.adapter.BannerAdapter
@@ -67,7 +66,8 @@ class HomeFragment : Fragment() {
 
     private fun setupBannerAdapter() {
         val bannerAdapter = BannerAdapter { position ->
-            val action = HomeFragmentDirections.actionHomeToEventBanner()
+            Log.d("HomeFragment", "배너 클릭: ${position + 1}번째 배너")
+            val action = HomeFragmentDirections.actionHomeToEventBanner(position)
             findNavController().navigate(action)
         }
         binding.viewPagerHomeBanner.adapter = bannerAdapter

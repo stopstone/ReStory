@@ -10,7 +10,6 @@ import com.cyber.restory.data.model.GreenTourResponse
 import com.cyber.restory.data.model.RegionCode
 import com.cyber.restory.domain.usecase.GetCityFiltersUseCase
 import com.cyber.restory.presentation.custom.Region
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,33 +42,35 @@ class EventBannerViewModel @Inject constructor(
         }
     }
 
-    fun getCityFilters() {
+    fun initializeWithSeoul() {
         viewModelScope.launch {
-            try {
-                Log.d("EventBannerViewModel", "도시 필터 가져오기 시작")
-                val filters = getCityFiltersUseCase()
-                val regions = filters.map { Region(it.code, it.description) }
-                _cityFilters.value = regions
-                Log.d("EventBannerViewModel", "도시 필터 가져오기 성공: ${regions.size}개의 필터")
+            getCityFilters()
+            val seoul = Region("SEOUL", "서울")
+            setSelectedRegion(seoul)
+            getGreenTourInfo()
+        }
+    }
 
-                // 서울을 초기 선택 지역으로 설정
-                regions.find { it.name == "서울" }?.let { seoul ->
-                    setSelectedRegion(seoul)
-                }
-            } catch (e: Exception) {
-                Log.e("EventBannerViewModel", "도시 필터 가져오기 실패: ${e.message}")
-            }
+    private suspend fun getCityFilters() {
+        try {
+            Log.d("EventBannerViewModel", "도시 필터 가져오기 시작")
+            val filters = getCityFiltersUseCase()
+            val regions = filters.map { Region(it.code, it.description) }
+            _cityFilters.value = regions
+            Log.d("EventBannerViewModel", "도시 필터 가져오기 성공: ${regions.size}개의 필터")
+        } catch (e: Exception) {
+            Log.e("EventBannerViewModel", "도시 필터 가져오기 실패: ${e.message}")
         }
     }
 
     fun setSelectedRegion(region: Region) {
         _selectedRegion.value = region
-        getGreenTourInfo(region)
     }
 
-    fun getGreenTourInfo(region: Region) {
+    fun getGreenTourInfo() {
         viewModelScope.launch {
             try {
+                val region = _selectedRegion.value ?: return@launch
                 Log.d("EventBannerViewModel", "녹색 관광 정보 요청 시작: 지역 = ${region.name}")
                 val regionCode = RegionCode.fromDescription(region.name)?.publicApiCode
                     ?: throw IllegalArgumentException("잘못된 지역명: ${region.name}")
@@ -85,7 +86,6 @@ class EventBannerViewModel @Inject constructor(
                     type = "json",
                     serviceKey = URL.GREEN_TOUR_API
                 )
-
 
                 Log.d("EventBannerViewModel", "녹색 관광 정보 요청 성공: ${response.response.body.totalCount}개의 항목 수신")
                 _greenTourInfo.value = response

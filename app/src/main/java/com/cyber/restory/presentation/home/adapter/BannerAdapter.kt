@@ -14,13 +14,12 @@ class BannerAdapter(private val onItemClick: (Int) -> Unit) : RecyclerView.Adapt
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BannerViewHolder {
-        val binding =
-            ItemBannerImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemBannerImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return BannerViewHolder(binding, onItemClick)
     }
 
     override fun onBindViewHolder(holder: BannerViewHolder, position: Int) {
-        holder.bind(images[position])
+        holder.bind(images[position], position)
     }
 
     override fun getItemCount() = images.size
@@ -29,9 +28,9 @@ class BannerAdapter(private val onItemClick: (Int) -> Unit) : RecyclerView.Adapt
         private val binding: ItemBannerImageBinding,
         private val onItemClick: (Int) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(imageRes: Int) {
+        fun bind(imageRes: Int, position: Int) {
             binding.bannerImageView.setImageResource(imageRes)
-            binding.root.setOnClickListener { onItemClick(adapterPosition) }
+            binding.root.setOnClickListener { onItemClick(position) }
         }
     }
 }

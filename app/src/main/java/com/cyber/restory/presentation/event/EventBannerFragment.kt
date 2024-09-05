@@ -9,12 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyber.restory.R
@@ -34,10 +34,15 @@ class EventBannerFragment : Fragment() {
     private val eventBannerAdapter: EventBannerAdapter by lazy { EventBannerAdapter() }
     private val regionAdapter: RegionAdapter by lazy { RegionAdapter(::onRegionSelected) }
     private val publicApiAdapter: PublicApiAdapter by lazy { PublicApiAdapter() }
-
     private val viewModel: EventBannerViewModel by viewModels()
+    private val args: EventBannerFragmentArgs by navArgs()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentEventBannerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -47,7 +52,16 @@ class EventBannerFragment : Fragment() {
         Log.d("EventBannerFragment", "onViewCreated 시작")
         setLayout()
         observeViewModel()
-        viewModel.getCityFilters()
+
+        when (args.bannerPosition) {
+            0 -> {
+                Log.d("EventBannerFragment", "첫 번째 배너 클릭")
+                viewModel.initializeWithSeoul()
+            }
+
+            1 -> Log.d("EventBannerFragment", "두 번째 배너 클릭")
+            2 -> Log.d("EventBannerFragment", "세 번째 배너 클릭")
+        }
     }
 
     override fun onDestroyView() {
@@ -61,7 +75,7 @@ class EventBannerFragment : Fragment() {
         with(binding) {
             setEventBannerRecyclerView()
             setRegionRecyclerView()
-            setPublicApiRecyclerView()  // 추가
+            setPublicApiRecyclerView()
             btnRegionSelector.text = "지역 목록"
             btnRegionSelector.setOnClickListener { toggleRegionList() }
             rvRegionList.visibility = View.GONE
@@ -103,7 +117,7 @@ class EventBannerFragment : Fragment() {
         val startIndex = 0
         val endIndex = region.length
         spannableString.setSpan(
-            ForegroundColorSpan(getColor(requireContext(), R.color.blue_500)),
+            ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.blue_500)),
             startIndex,
             endIndex,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -166,5 +180,8 @@ class EventBannerFragment : Fragment() {
         toggleRegionList()
         Log.d("EventBannerFragment", "선택된 지역: ${region.name}")
         viewModel.setSelectedRegion(region)
+        if (args.bannerPosition == 0) {
+            viewModel.getGreenTourInfo()
+        }
     }
 }
