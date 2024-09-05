@@ -1,8 +1,7 @@
 package com.cyber.restory.di
 
 import com.cyber.restory.data.api.ApiClient
-import com.cyber.restory.data.api.GreenTourApiService
-import com.cyber.restory.data.api.URL
+import com.cyber.restory.data.api.TourApiService
 import com.cyber.restory.data.api.URL.BASE_URL
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -49,7 +48,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideGreenTourApiService(): GreenTourApiService {
+    fun provideGreenTourApiService(): TourApiService {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
@@ -67,7 +66,7 @@ class NetworkModule {
             .client(client)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
-            .create(GreenTourApiService::class.java)
+            .create(TourApiService::class.java)
     }
 
     @Singleton

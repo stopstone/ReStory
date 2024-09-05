@@ -3,13 +3,14 @@ package com.cyber.restory.presentation.event.viewModel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cyber.restory.data.api.GreenTourApiService
-import com.cyber.restory.data.api.URL
 import com.cyber.restory.data.model.GreenTourItem
-import com.cyber.restory.data.model.GreenTourResponse
+import com.cyber.restory.data.model.LocationBasedTourItem
 import com.cyber.restory.data.model.RegionCode
 import com.cyber.restory.domain.usecase.GetCityFiltersUseCase
+import com.cyber.restory.domain.usecase.GetGreenTourInfoUseCase
+import com.cyber.restory.domain.usecase.GetLocationBasedTourInfoUseCase
 import com.cyber.restory.presentation.custom.Region
+import com.cyber.restory.presentation.event.adapter.TourItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,34 +21,28 @@ import javax.inject.Inject
 @HiltViewModel
 class EventBannerViewModel @Inject constructor(
     private val getCityFiltersUseCase: GetCityFiltersUseCase,
-    private val greenTourApiService: GreenTourApiService
+    private val getGreenTourInfoUseCase: GetGreenTourInfoUseCase,
+    private val getLocationBasedTourInfoUseCase: GetLocationBasedTourInfoUseCase
 ) : ViewModel() {
 
     private val _cityFilters = MutableStateFlow<List<Region>>(emptyList())
     val cityFilters: StateFlow<List<Region>> = _cityFilters.asStateFlow()
 
-    private val _greenTourInfo = MutableStateFlow<GreenTourResponse?>(null)
-    val greenTourInfo: StateFlow<GreenTourResponse?> = _greenTourInfo.asStateFlow()
-
     private val _selectedRegion = MutableStateFlow<Region?>(null)
     val selectedRegion: StateFlow<Region?> = _selectedRegion.asStateFlow()
 
-    private val _filteredGreenTourItems = MutableStateFlow<List<GreenTourItem>>(emptyList())
-    val filteredGreenTourItems: StateFlow<List<GreenTourItem>> = _filteredGreenTourItems.asStateFlow()
+    private val _tourItems = MutableStateFlow<List<TourItem>>(emptyList())
+    val tourItems: StateFlow<List<TourItem>> = _tourItems.asStateFlow()
 
-    private fun filterGreenTourItems(items: List<GreenTourItem>) {
-        _filteredGreenTourItems.value = items.filter { item ->
-            item.summary.contains("http://", ignoreCase = true) ||
-                    item.summary.contains("https://", ignoreCase = true)
-        }
-    }
+    private var currentBannerPosition: Int = -1
 
-    fun initializeWithSeoul() {
+    fun initializeWithSeoul(bannerPosition: Int) {
+        Log.d("EventBannerViewModel", "서울로 초기화 시작: 배너 위치 = $bannerPosition")
+        currentBannerPosition = bannerPosition
         viewModelScope.launch {
             getCityFilters()
             val seoul = Region("SEOUL", "서울")
             setSelectedRegion(seoul)
-            getGreenTourInfo()
         }
     }
 
@@ -64,35 +59,61 @@ class EventBannerViewModel @Inject constructor(
     }
 
     fun setSelectedRegion(region: Region) {
+        Log.d("EventBannerViewModel", "선택된 지역 설정: ${region.name}")
         _selectedRegion.value = region
+        when (currentBannerPosition) {
+            0 -> getGreenTourInfo(region)
+            1 -> getLocationBasedTourInfo(region, "12")  // 관광지
+            2 -> getLocationBasedTourInfo(region, "15")  // 축제공연행사
+        }
     }
 
-    fun getGreenTourInfo() {
+    private fun getGreenTourInfo(region: Region) {
         viewModelScope.launch {
             try {
-                val region = _selectedRegion.value ?: return@launch
                 Log.d("EventBannerViewModel", "녹색 관광 정보 요청 시작: 지역 = ${region.name}")
-                val regionCode = RegionCode.fromDescription(region.name)?.publicApiCode
+                val response = getGreenTourInfoUseCase(region)
+                val items = response.response.body.itemsWrapper?.items
+
+                Log.d("EventBannerViewModel", "녹색 관광 정보 응답 수신: 총 항목 수 = ${response.response.body.totalCount}, 수신된 항목 수 = ${items?.size ?: 0}")
+
+                if (items.isNullOrEmpty()) {
+                    Log.w("EventBannerViewModel", "수신된 녹색 관광 정보가 없습니다.")
+                    _tourItems.value = emptyList()
+                } else {
+                    val filteredItems = items.filter { item ->
+                        item.summary.contains("http://", ignoreCase = true) ||
+                                item.summary.contains("https://", ignoreCase = true)
+                    }
+                    _tourItems.value = filteredItems.map { TourItem.GreenTour(it) }
+                    Log.d("EventBannerViewModel", "녹색 관광 정보 필터링 완료: 원본 ${items.size}개 중 ${filteredItems.size}개 항목 선택")
+                }
+
+                Log.d("EventBannerViewModel", "녹색 관광 정보 처리 완료: 최종 ${_tourItems.value.size}개 항목")
+            } catch (e: Exception) {
+                Log.e("EventBannerViewModel", "녹색 관광 정보 요청 실패: ${e.message}", e)
+                _tourItems.value = emptyList()
+            }
+        }
+    }
+
+    private fun getLocationBasedTourInfo(region: Region, contentTypeId: String) {
+        viewModelScope.launch {
+            try {
+                Log.d("EventBannerViewModel", "위치 기반 관광 정보 요청 시작: 지역 = ${region.name}, 컨텐츠 타입 = $contentTypeId")
+                val regionCode = RegionCode.fromDescription(region.name)
                     ?: throw IllegalArgumentException("잘못된 지역명: ${region.name}")
 
-                Log.d("EventBannerViewModel", "매핑된 지역 코드: $regionCode")
-
-                val response = greenTourApiService.getGreenTourInfo(
-                    numOfRows = 10,
-                    pageNo = 1,
-                    mobileOS = "AND",
-                    mobileApp = "Restory",
-                    areaCode = regionCode,
-                    type = "json",
-                    serviceKey = URL.GREEN_TOUR_API
+                val response = getLocationBasedTourInfoUseCase(
+                    regionCode.longitude.toString(),
+                    regionCode.latitude.toString(),
+                    "50000",  // 50km를 미터 단위로 표현
+                    contentTypeId
                 )
-
-                Log.d("EventBannerViewModel", "녹색 관광 정보 요청 성공: ${response.response.body.totalCount}개의 항목 수신")
-                _greenTourInfo.value = response
-                filterGreenTourItems(response.response.body.items.item)
-
+                _tourItems.value = response.response.body.items.item.map { TourItem.LocationBasedTour(it) }
+                Log.d("EventBannerViewModel", "위치 기반 관광 정보 요청 성공: ${_tourItems.value.size}개의 항목")
             } catch (e: Exception) {
-                Log.e("EventBannerViewModel", "녹색 관광 정보 요청 실패: ${e.message}")
+                Log.e("EventBannerViewModel", "위치 기반 관광 정보 요청 실패: ${e.message}")
             }
         }
     }

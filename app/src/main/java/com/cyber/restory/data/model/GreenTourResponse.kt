@@ -1,28 +1,32 @@
 package com.cyber.restory.data.model
 
+import com.google.gson.annotations.SerializedName
+
 data class GreenTourResponse(
-    val response: Response
+    val response: GreenTourResponseBody
 )
 
-data class Response(
-    val header: Header,
-    val body: Body
+data class GreenTourResponseBody(
+    val header: GreenTourHeader,
+    val body: GreenTourBody
 )
 
-data class Header(
+data class GreenTourHeader(
     val resultCode: String,
     val resultMsg: String
 )
 
-data class Body(
+data class GreenTourBody(
     val numOfRows: Int,
     val pageNo: Int,
     val totalCount: Int,
-    val items: Items
+    @SerializedName("items")
+    val itemsWrapper: ItemsWrapper?
 )
 
-data class Items(
-    val item: List<GreenTourItem>
+data class ItemsWrapper(
+    @SerializedName("item")
+    val items: List<GreenTourItem>?
 )
 
 data class GreenTourItem(

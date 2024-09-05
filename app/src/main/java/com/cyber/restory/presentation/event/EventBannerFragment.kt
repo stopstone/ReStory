@@ -20,9 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyber.restory.R
 import com.cyber.restory.databinding.FragmentEventBannerBinding
 import com.cyber.restory.presentation.custom.Region
-import com.cyber.restory.presentation.event.adapter.EventBannerAdapter
-import com.cyber.restory.presentation.event.adapter.PublicApiAdapter
 import com.cyber.restory.presentation.event.adapter.RegionAdapter
+import com.cyber.restory.presentation.event.adapter.TourItemAdapter
 import com.cyber.restory.presentation.event.viewModel.EventBannerViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -31,18 +30,13 @@ import kotlinx.coroutines.launch
 class EventBannerFragment : Fragment() {
     private var _binding: FragmentEventBannerBinding? = null
     private val binding get() = _binding!!
-    private val eventBannerAdapter: EventBannerAdapter by lazy { EventBannerAdapter() }
     private val regionAdapter: RegionAdapter by lazy { RegionAdapter(::onRegionSelected) }
-    private val publicApiAdapter: PublicApiAdapter by lazy { PublicApiAdapter() }
+    private val tourItemAdapter: TourItemAdapter by lazy { TourItemAdapter() }
     private val viewModel: EventBannerViewModel by viewModels()
     private val args: EventBannerFragmentArgs by navArgs()
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        Log.d("EventBannerFragment", "onCreateView 호출")
         _binding = FragmentEventBannerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -53,14 +47,12 @@ class EventBannerFragment : Fragment() {
         setLayout()
         observeViewModel()
 
-        when (args.bannerPosition) {
-            0 -> {
-                Log.d("EventBannerFragment", "첫 번째 배너 클릭")
-                viewModel.initializeWithSeoul()
-            }
+        viewModel.initializeWithSeoul(args.bannerPosition)
 
-            1 -> Log.d("EventBannerFragment", "두 번째 배너 클릭")
-            2 -> Log.d("EventBannerFragment", "세 번째 배너 클릭")
+        when (args.bannerPosition) {
+            0 -> Log.d("EventBannerFragment", "첫 번째 배너 클릭 (녹색 관광)")
+            1 -> Log.d("EventBannerFragment", "두 번째 배너 클릭 (위치 기반 관광)")
+            2 -> Log.d("EventBannerFragment", "세 번째 배너 클릭 (축제공연행사)")
         }
     }
 
@@ -75,7 +67,6 @@ class EventBannerFragment : Fragment() {
         with(binding) {
             setEventBannerRecyclerView()
             setRegionRecyclerView()
-            setPublicApiRecyclerView()
             btnRegionSelector.text = "지역 목록"
             btnRegionSelector.setOnClickListener { toggleRegionList() }
             rvRegionList.visibility = View.GONE
@@ -83,19 +74,10 @@ class EventBannerFragment : Fragment() {
         Log.d("EventBannerFragment", "레이아웃 설정 완료")
     }
 
-    private fun setPublicApiRecyclerView() {
-        Log.d("EventBannerFragment", "공공 API RecyclerView 설정 시작")
-        with(binding.rvEventBannerList) {
-            adapter = publicApiAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-        }
-        Log.d("EventBannerFragment", "공공 API RecyclerView 설정 완료")
-    }
-
     private fun setEventBannerRecyclerView() {
         Log.d("EventBannerFragment", "이벤트 배너 RecyclerView 설정 시작")
         with(binding.rvEventBannerList) {
-            adapter = eventBannerAdapter
+            adapter = tourItemAdapter
             itemAnimator = null
             layoutManager = LinearLayoutManager(requireContext())
         }
@@ -148,17 +130,9 @@ class EventBannerFragment : Fragment() {
                 }
 
                 launch {
-                    viewModel.greenTourInfo.collect { response ->
-                        response?.let {
-                            Log.d("EventBannerFragment", "새로운 녹색 관광 정보 수신")
-                        }
-                    }
-                }
-
-                launch {
-                    viewModel.filteredGreenTourItems.collect { items ->
-                        Log.d("EventBannerFragment", "필터링된 녹색 관광 정보 수신: ${items.size}개 항목")
-                        publicApiAdapter.submitList(items)
+                    viewModel.tourItems.collect { items ->
+                        Log.d("EventBannerFragment", "관광 정보 수신: ${items.size}개 항목")
+                        tourItemAdapter.submitList(items)
                     }
                 }
             }
@@ -180,8 +154,5 @@ class EventBannerFragment : Fragment() {
         toggleRegionList()
         Log.d("EventBannerFragment", "선택된 지역: ${region.name}")
         viewModel.setSelectedRegion(region)
-        if (args.bannerPosition == 0) {
-            viewModel.getGreenTourInfo()
-        }
     }
 }

@@ -1,12 +1,15 @@
 package com.cyber.restory.di
 
 import com.cyber.restory.data.api.ApiClient
+import com.cyber.restory.data.api.TourApiService
 import com.cyber.restory.data.repository.CityRepositoryImpl
 import com.cyber.restory.data.repository.FilterRepositoryImpl
 import com.cyber.restory.data.repository.PostRepositoryImpl
+import com.cyber.restory.data.repository.TourRepositoryImpl
 import com.cyber.restory.domain.repository.CityRepository
 import com.cyber.restory.domain.repository.FilterRepository
 import com.cyber.restory.domain.repository.PostRepository
+import com.cyber.restory.domain.repository.TourRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,5 +35,11 @@ object RepositoryModule {
     @Singleton
     fun provideCityRepository(apiService: ApiClient): CityRepository {
         return CityRepositoryImpl(apiService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTourRepository(apiService: TourApiService): TourRepository {
+        return TourRepositoryImpl(apiService)
     }
 }
