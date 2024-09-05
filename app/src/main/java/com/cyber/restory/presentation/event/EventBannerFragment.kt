@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,6 +47,7 @@ class EventBannerFragment : Fragment() {
         Log.d("EventBannerFragment", "onViewCreated 시작")
         setLayout()
         observeViewModel()
+        setupBackButton()
 
         viewModel.initializeWithSeoul(args.bannerPosition)
 
@@ -138,6 +140,14 @@ class EventBannerFragment : Fragment() {
             }
         }
         Log.d("EventBannerFragment", "ViewModel 관찰 설정 완료")
+    }
+
+
+    private fun setupBackButton() {
+        binding.btnBack.setOnClickListener {
+            Log.d("EventBannerFragment", "백 버튼 클릭")
+            findNavController().navigateUp()
+        }
     }
 
     private fun toggleRegionList() {
