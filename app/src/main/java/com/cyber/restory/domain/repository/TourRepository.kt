@@ -7,6 +7,7 @@ import com.cyber.restory.presentation.custom.Region
 interface TourRepository {
     suspend fun getGreenTourInfo(region: Region): GreenTourResponse
     suspend fun getLocationBasedTourInfo(
+        numOfRows: Int,
         mapX: String,
         mapY: String,
         radius: String,

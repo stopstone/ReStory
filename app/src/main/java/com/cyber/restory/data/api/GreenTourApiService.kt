@@ -19,13 +19,12 @@ interface TourApiService {
 
     @GET("B551011/KorService1/locationBasedList1")
     suspend fun getLocationBasedTourInfo(
-        @Query("numOfRows") numOfRows: Int,
+        @Query("numOfRows") numOfRows: Int = 10,
         @Query("pageNo") pageNo: Int,
         @Query("MobileOS") mobileOS: String,
         @Query("MobileApp") mobileApp: String,
+        @Query("arrange") arrange: String = "E",
         @Query("_type") type: String,
-        @Query("listYN") listYN: String,
-        @Query("arrange") arrange: String,
         @Query("mapX") mapX: String,
         @Query("mapY") mapY: String,
         @Query("radius") radius: String,

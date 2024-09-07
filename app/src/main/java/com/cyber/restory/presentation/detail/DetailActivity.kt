@@ -14,10 +14,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.cyber.restory.R
 import com.cyber.restory.data.model.Post
 import com.cyber.restory.databinding.ActivityDetailBinding
+import com.cyber.restory.presentation.detail.adapter.NearbyPlacesAdapter
 import com.cyber.restory.presentation.detail.viewmodel.DetailViewModel
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -39,12 +41,27 @@ class DetailActivity : AppCompatActivity() {
     private val viewModel: DetailViewModel by viewModels()
     private val args: DetailActivityArgs by navArgs()
 
+    private val nearbyPlacesAdapter = NearbyPlacesAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        viewModel.getPostDetail(args.postId)
-        setupClickListeners()
 
+        setupClickListeners()
+        setupRecyclerView()
+
+        // 즉시 ViewModel에 게시글 ID 전달
+        viewModel.initializeWithPostId(args.postId)
+
+        observeViewModel()
+    }
+
+    private fun setupRecyclerView() {
+        binding.rvNearbyPlaces.adapter = nearbyPlacesAdapter
+        binding.rvNearbyPlaces.layoutManager = LinearLayoutManager(this)
+    }
+
+    private fun observeViewModel() {
         lifecycleScope.launch {
             viewModel.postDetail.collect { post ->
                 if (post != null) {
@@ -53,28 +70,12 @@ class DetailActivity : AppCompatActivity() {
                 }
             }
         }
-    }
 
-    private fun initializeMapView(post: Post) {
-        mapView = binding.mapView
-        mapView?.start(object : MapLifeCycleCallback() {
-            override fun onMapDestroy() {
-                // 지도 API가 정상적으로 종료될 때 호출됨
-                Log.d("DetailActivity", "지도 API가 정상적으로 종료되었습니다.")
+        lifecycleScope.launch {
+            viewModel.nearbyPlaces.collect { places ->
+                nearbyPlacesAdapter.submitList(places)
             }
-
-            override fun onMapError(error: Exception) {
-                // 인증 실패 및 지도 사용 중 에러가 발생할 때 호출됨
-                Log.e("DetailActivity", "지도 사용 중 에러 발생: ${error.message}", error)
-            }
-        }, object : KakaoMapReadyCallback() {
-            override fun onMapReady(map: KakaoMap) {
-                // 인증 후 API가 정상적으로 실행될 때 호출됨
-                Log.d("DetailActivity", "KakaoMap 준비 완료")
-                kakaoMap = map
-                showLocationOnMap(post) // 여기에 post 데이터를 전달
-            }
-        })
+        }
     }
 
     private fun updateUI(post: Post) {
@@ -147,11 +148,29 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun initializeMapView(post: Post) {
+        mapView = binding.mapView
+        mapView?.start(object : MapLifeCycleCallback() {
+            override fun onMapDestroy() {
+                Log.d("DetailActivity", "지도 API가 정상적으로 종료되었습니다.")
+            }
+
+            override fun onMapError(error: Exception) {
+                Log.e("DetailActivity", "지도 사용 중 에러 발생: ${error.message}", error)
+            }
+        }, object : KakaoMapReadyCallback() {
+            override fun onMapReady(map: KakaoMap) {
+                Log.d("DetailActivity", "KakaoMap 준비 완료")
+                kakaoMap = map
+                showLocationOnMap(post)
+            }
+        })
+    }
+
     private fun showLocationOnMap(post: Post) {
         val location = LatLng.from(post.latitude, post.longitude)
 
         kakaoMap?.let { map ->
-            // 카메라 이동
             map.moveCamera(CameraUpdateFactory.newCenterPosition(location))
             map.moveCamera(CameraUpdateFactory.zoomTo(16))
         }
@@ -178,5 +197,4 @@ class DetailActivity : AppCompatActivity() {
         clipboard.setPrimaryClip(clip)
         Toast.makeText(this, "클립보드에 저장 되었습니다.", Toast.LENGTH_SHORT).show()
     }
-
 }

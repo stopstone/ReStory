@@ -29,6 +29,7 @@ class TourRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getLocationBasedTourInfo(
+        numOfRows: Int,
         mapX: String,
         mapY: String,
         radius: String,
@@ -36,13 +37,11 @@ class TourRepositoryImpl @Inject constructor(
     ): LocationBasedTourResponse {
         Log.d("TourRepositoryImpl", "위치 기반 관광 정보 요청 시작: 위도 = $mapY, 경도 = $mapX, 반경 = $radius, 컨텐츠 타입 = $contentTypeId")
         val response = tourApiService.getLocationBasedTourInfo(
-            numOfRows = 10,
+            numOfRows = numOfRows,
             pageNo = 1,
             mobileOS = "AND",
             mobileApp = "Restory",
             type = "json",
-            listYN = "Y",
-            arrange = "A",
             mapX = mapX,
             mapY = mapY,
             radius = radius,

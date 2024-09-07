@@ -34,7 +34,7 @@ data class LocationBasedTourItem(
     val cat1: String,
     val cat2: String,
     val cat3: String,
-    val contentTypeId: String,
+    val contentTypeId: String?,
     val createdtime: String,
     val dist: String,
     val firstimage: String,
@@ -46,5 +46,6 @@ data class LocationBasedTourItem(
     val modifiedtime: String,
     val sigungucode: String,
     val tel: String,
-    val title: String
+    val title: String,
+    val distance: Double,
 )
