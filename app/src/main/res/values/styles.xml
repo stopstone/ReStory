@@ -9,13 +9,18 @@
         <item name="android:textColor">@color/black</item> <!-- 원하는 색상으로 변경 -->
     </style>
 
-    <style name="Colors_Widget.MaterialComponents.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+    <style name="CustomChipStyle" parent="Widget.MaterialComponents.Chip.Choice">
         <item name="chipBackgroundColor">@color/color_choice_chip_background_color</item>
         <item name="chipStrokeColor">@color/color_choice_chip_strokecolor_selector</item>
         <item name="chipStrokeWidth">1dp</item>
         <item name="android:textColor">@color/color_choice_chip_text_color</item>
-        <item name="android:textSize">14sp</item> <!-- 텍스트 크기 설정 -->
-        <item name="android:textStyle">bold</item> <!-- 텍스트 스타일 설정 -->
+        <item name="android:textSize">14sp</item>
+        <item name="shapeAppearance">@style/CustomChipShape</item>
+    </style>
+
+    <style name="CustomChipShape" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">100dp</item>
     </style>
 
 
@@ -42,4 +47,5 @@
     <style name="ExpandedToolbarTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@android:color/transparent</item>
     </style>
+
 </resources>

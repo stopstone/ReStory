@@ -1,5 +1,6 @@
 package com.cyber.restory.presentation.home
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,6 +27,7 @@ import com.cyber.restory.presentation.home.adapter.ArticleThumbnailAdapter
 import com.cyber.restory.presentation.home.adapter.BannerAdapter
 import com.cyber.restory.presentation.home.viewmodel.HomeViewModel
 import com.google.android.material.chip.Chip
+import com.google.android.material.shape.CornerFamily
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -37,7 +39,11 @@ class HomeFragment : Fragment() {
 
     private lateinit var thumbnailAdapter: ArticleThumbnailAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -160,8 +166,10 @@ class HomeFragment : Fragment() {
                 iconEndPadding = 0f
                 iconStartPadding = 0f
 
-                setTextAppearanceResource(R.style.Colors_Widget_MaterialComponents_Chip_Choice)
+                // 텍스트 스타일 적용
+                setTextAppearanceResource(R.style.CustomChipStyle)
 
+                // 배경색과 테두리 설정
                 chipBackgroundColor = ContextCompat.getColorStateList(
                     context,
                     R.color.color_choice_chip_background_color
@@ -172,6 +180,12 @@ class HomeFragment : Fragment() {
                 )
                 chipStrokeWidth = resources.getDimension(R.dimen.chip_stroke_width)
 
+                // 칩의 모서리 반경 설정
+                shapeAppearanceModel = shapeAppearanceModel.toBuilder()
+                    .setAllCorners(CornerFamily.ROUNDED, 100f) // 원하는 반경 값 설정
+                    .build()
+
+                // 마진 설정
                 layoutParams = ViewGroup.MarginLayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
@@ -179,10 +193,14 @@ class HomeFragment : Fragment() {
                     marginEnd = resources.getDimensionPixelSize(R.dimen.chip_margin_end)
                 }
 
+                // 체크 상태에 따라 데이터 요청
                 setOnCheckedChangeListener { _, isChecked ->
                     if (isChecked) {
                         Log.d("HomeFragment", "${filterType.description} 칩 선택됨")
-                        viewModel.selectFilterType(filterType)
+                        viewModel.selectFilterType(filterType) // 데이터 요청 로직 유지
+                        setTypeface(null, Typeface.BOLD) // 선택된 경우 볼드체로 변경
+                    } else {
+                        setTypeface(null, Typeface.NORMAL) // 기본은 일반체
                     }
                 }
             }
@@ -200,8 +218,6 @@ class HomeFragment : Fragment() {
             thumbnailAdapter.submitList(posts) {
                 Log.d("HomeFragment", "썸네일 어댑터 리스트 업데이트 완료")
             }
-        } else {
-            Toast.makeText(requireContext(), "포스트가 없습니다.", Toast.LENGTH_SHORT).show()
         }
         Log.d("HomeFragment", "포스트 UI 업데이트 완료")
     }
