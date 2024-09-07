@@ -10,9 +10,12 @@ import com.cyber.restory.domain.usecase.GetFilterTypesUseCase
 import com.cyber.restory.domain.usecase.GetPostDetailUseCase
 import com.cyber.restory.domain.usecase.GetPostsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +24,7 @@ class HomeViewModel @Inject constructor(
     private val getFilterTypesUseCase: GetFilterTypesUseCase,
     private val getPostsUseCase: GetPostsUseCase,
 ) : ViewModel() {
+
     private val _filterTypes = MutableStateFlow<List<FilterTypeResponse>>(emptyList())
     val filterTypes: StateFlow<List<FilterTypeResponse>> = _filterTypes.asStateFlow()
 
@@ -33,8 +37,14 @@ class HomeViewModel @Inject constructor(
     private val _currentThumbnailPost = MutableStateFlow<Post?>(null)
     val currentThumbnailPost: StateFlow<Post?> = _currentThumbnailPost.asStateFlow()
 
+    private val _selectedThumbnailPosition = MutableStateFlow(0)
+    val selectedThumbnailPosition: StateFlow<Int> = _selectedThumbnailPosition.asStateFlow()
+
+    private var thumbnailRotationJob: Job? = null
+    private var isLongPressed = false
+
     private var currentPage = 1
-    private val pageSize = 10 // 한 페이지당 게시글 수
+    private val pageSize = 10
 
     fun getFilterTypes() {
         viewModelScope.launch {
@@ -42,10 +52,7 @@ class HomeViewModel @Inject constructor(
                 Log.d("HomeViewModel", "필터 타입 가져오기 시작")
                 val types = getFilterTypesUseCase()
                 _filterTypes.value = types
-                Log.d(
-                    "HomeViewModel",
-                    "가져온 필터 타입: ${types.joinToString { "코드: ${it.code}, 설명: ${it.description}" }}"
-                )
+                Log.d("HomeViewModel", "가져온 필터 타입: ${types.joinToString { "코드: ${it.code}, 설명: ${it.description}" }}")
                 if (types.isNotEmpty() && _selectedFilterType.value == null) {
                     selectFilterType(types.first())
                 }
@@ -57,6 +64,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun selectFilterType(filterType: FilterTypeResponse) {
+        Log.d("HomeViewModel", "필터 타입 선택: ${filterType.description}")
         _selectedFilterType.value = filterType
         getPosts(filterType.code, resetPage = true)
     }
@@ -77,21 +85,59 @@ class HomeViewModel @Inject constructor(
 
                 if (resetPage) {
                     _posts.value = result.data
+                    if (result.data.isNotEmpty()) {
+                        setCurrentThumbnailPost(result.data.first())
+                        _selectedThumbnailPosition.value = 0
+                    }
                 } else {
                     _posts.value += result.data
                 }
 
-                if (_currentThumbnailPost.value == null && result.data.isNotEmpty()) {
-                    setCurrentThumbnailPost(result.data.first())
-                }
-
+                resetThumbnailSelectionAndTimer()
                 currentPage++
             } catch (e: Exception) {
                 Log.e("HomeViewModel", "게시글 요청 실패: ${e.message}")
             }
         }
     }
-    fun setCurrentThumbnailPost(post: Post) {
+
+    private fun setCurrentThumbnailPost(post: Post) {
+        Log.d("HomeViewModel", "현재 썸네일 포스트 설정: ${post.title}")
         _currentThumbnailPost.value = post
+    }
+
+    private fun resetThumbnailSelectionAndTimer() {
+        Log.d("HomeViewModel", "썸네일 선택 및 타이머 리셋")
+        thumbnailRotationJob?.cancel()
+        startThumbnailRotation()
+    }
+
+    private fun startThumbnailRotation() {
+        thumbnailRotationJob?.cancel()
+        thumbnailRotationJob = viewModelScope.launch {
+            while (isActive) {
+                delay(3000)
+                if (!isLongPressed) {
+                    val currentTime = System.currentTimeMillis()
+                    val currentPosition = _selectedThumbnailPosition.value
+                    val nextPosition = (currentPosition + 1) % (_posts.value.size.coerceAtLeast(1))
+                    _selectedThumbnailPosition.value = nextPosition
+                    setCurrentThumbnailPost(_posts.value[nextPosition])
+                    Log.d("HomeViewModel", "타이머 동작: 현재 시간 $currentTime, 다음 포지션 $nextPosition")
+                }
+            }
+        }
+    }
+
+    fun selectThumbnail(position: Int) {
+        Log.d("HomeViewModel", "썸네일 선택: 포지션 $position")
+        _selectedThumbnailPosition.value = position
+        setCurrentThumbnailPost(_posts.value[position])
+        resetThumbnailSelectionAndTimer()  // 타이머 초기화 추가
+    }
+
+    fun setLongPressState(isLongPressed: Boolean) {
+        this.isLongPressed = isLongPressed
+        Log.d("HomeViewModel", "롱프레스 상태 변경: $isLongPressed")
     }
 }

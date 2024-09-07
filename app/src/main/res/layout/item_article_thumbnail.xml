@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<com.google.android.material.imageview.ShapeableImageView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/iv_article_thumbnail"
     android:layout_width="match_parent"
-    android:layout_height="90dp"
-    android:layout_marginBottom="5dp"
-    android:background="@color/gray_300"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:shapeAppearanceOverlay="@style/AppRoundedImage.Small" />
+    android:layout_height="wrap_content"
+    android:padding="4dp">
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_article_thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/AppRoundedImage.Small" />
+
+    <View
+        android:id="@+id/view_border"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:background="@drawable/selector_thumbnail_border" />
+
+</FrameLayout>

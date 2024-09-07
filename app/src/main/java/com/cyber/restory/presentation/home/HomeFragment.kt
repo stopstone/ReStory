@@ -3,6 +3,7 @@ package com.cyber.restory.presentation.home
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -15,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cyber.restory.R
 import com.cyber.restory.data.model.FilterTypeResponse
@@ -33,28 +35,18 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: HomeViewModel by viewModels()
 
-    private val thumbnailAdapter: ArticleThumbnailAdapter by lazy {
-        ArticleThumbnailAdapter { post ->
-            updateMainThumbnail(post)
-        }
-    }
+    private lateinit var thumbnailAdapter: ArticleThumbnailAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("HomeFragment", "onViewCreated 시작")
         setupBannerAdapter()
         setupArticleThumbnailAdapter()
-
-        Log.d("HomeFragment", "onViewCreated 시작")
-
         setupObservers()
         viewModel.getFilterTypes()
 
@@ -74,9 +66,31 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupArticleThumbnailAdapter() {
+        thumbnailAdapter = ArticleThumbnailAdapter(
+            onItemClick = { post, position ->
+                Log.d("HomeFragment", "썸네일 클릭: 포지션 $position, 포스트 ${post.title}")
+                viewModel.selectThumbnail(position)
+            },
+            onItemLongPress = { post, position ->
+                Log.d("HomeFragment", "썸네일 롱프레스: 포지션 $position, 포스트 ${post.title}")
+                viewModel.setLongPressState(true)
+                viewModel.selectThumbnail(position)
+                true
+            }
+        )
+
         binding.rvHomeArticleThumbnailList.apply {
             adapter = thumbnailAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+                override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                    if (e.action == MotionEvent.ACTION_UP || e.action == MotionEvent.ACTION_CANCEL) {
+                        viewModel.setLongPressState(false)
+                        Log.d("HomeFragment", "터치 해제: 롱프레스 상태 false로 설정")
+                    }
+                    return false
+                }
+            })
         }
     }
 
@@ -104,12 +118,18 @@ class HomeFragment : Fragment() {
                         updatePostsUI(posts)
                     }
                 }
-
                 launch {
                     viewModel.currentThumbnailPost.collect { post ->
                         post?.let {
                             updateMainThumbnail(it)
                         }
+                    }
+                }
+                launch {
+                    viewModel.selectedThumbnailPosition.collect { position ->
+                        Log.d("HomeFragment", "선택된 썸네일 포지션 업데이트: $position")
+                        thumbnailAdapter.selectedPosition = position
+                        binding.rvHomeArticleThumbnailList.scrollToPosition(position)
                     }
                 }
             }
@@ -120,30 +140,28 @@ class HomeFragment : Fragment() {
         binding.cgHomeCategory.children.forEach { chip ->
             (chip as? Chip)?.let {
                 it.isChecked = it.text == selectedType?.description
+                Log.d("HomeFragment", "칩 업데이트: ${it.text}, 선택됨: ${it.isChecked}")
             }
         }
     }
 
     private fun createFilterChips(filterTypes: List<FilterTypeResponse>) {
         Log.d("HomeFragment", "필터 칩 생성 시작")
-        binding.cgHomeCategory.removeAllViews() // 기존 칩 제거
+        binding.cgHomeCategory.removeAllViews()
 
         filterTypes.forEach { filterType ->
             val chip = Chip(requireContext()).apply {
                 id = View.generateViewId()
                 text = filterType.description
                 isCheckable = true
-                isCheckedIconVisible = false // 체크 아이콘 숨기기
+                isCheckedIconVisible = false
 
-                // 아이콘 제거
                 chipIcon = null
                 iconEndPadding = 0f
                 iconStartPadding = 0f
 
-                // 스타일 적용
                 setTextAppearanceResource(R.style.Colors_Widget_MaterialComponents_Chip_Choice)
 
-                // 배경 및 테두리 설정
                 chipBackgroundColor = ContextCompat.getColorStateList(
                     context,
                     R.color.color_choice_chip_background_color
@@ -154,7 +172,6 @@ class HomeFragment : Fragment() {
                 )
                 chipStrokeWidth = resources.getDimension(R.dimen.chip_stroke_width)
 
-                // 마진 설정
                 layoutParams = ViewGroup.MarginLayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
@@ -170,7 +187,6 @@ class HomeFragment : Fragment() {
                 }
             }
 
-            // 디버그: 칩 텍스트 확인
             Log.d("HomeFragment", "생성된 칩 텍스트: ${chip.text}")
 
             binding.cgHomeCategory.addView(chip)
@@ -181,11 +197,9 @@ class HomeFragment : Fragment() {
     private fun updatePostsUI(posts: List<Post>) {
         Log.d("HomeFragment", "포스트 UI 업데이트 시작")
         if (posts.isNotEmpty()) {
-            val firstPost = posts.first()
-            viewModel.setCurrentThumbnailPost(firstPost)
-
-            // 썸네일 리스트 업데이트
-            thumbnailAdapter.submitList(posts)
+            thumbnailAdapter.submitList(posts) {
+                Log.d("HomeFragment", "썸네일 어댑터 리스트 업데이트 완료")
+            }
         } else {
             Toast.makeText(requireContext(), "포스트가 없습니다.", Toast.LENGTH_SHORT).show()
         }
@@ -193,6 +207,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun updateMainThumbnail(post: Post) {
+        Log.d("HomeFragment", "메인 썸네일 업데이트: ${post.title}")
         Glide.with(this@HomeFragment)
             .load(post.postImages.firstOrNull()?.imageUrl)
             .centerCrop()
