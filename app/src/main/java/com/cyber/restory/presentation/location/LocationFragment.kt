@@ -1,4 +1,4 @@
-package com.cyber.restory.presentation.mission
+package com.cyber.restory.presentation.location
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.cyber.restory.databinding.FragmentMissionBinding
 
-class MissionFragment: Fragment() {
+class LocationFragment: Fragment() {
     private var _binding: FragmentMissionBinding? = null
     private val binding get() = _binding!!
 

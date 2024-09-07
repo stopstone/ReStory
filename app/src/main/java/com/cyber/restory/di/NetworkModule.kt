@@ -1,12 +1,15 @@
 package com.cyber.restory.di
 
 import com.cyber.restory.data.api.ApiClient
+import com.cyber.restory.data.api.TourApiService
 import com.cyber.restory.data.api.URL.BASE_URL
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -41,6 +44,29 @@ class NetworkModule {
             .client(okHttpClient)
             .addConverterFactory(gsonConverterFactory)
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGreenTourApiService(): TourApiService {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+
+        val client = OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
+
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+
+        return Retrofit.Builder()
+            .baseUrl("https://apis.data.go.kr/")
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(TourApiService::class.java)
     }
 
     @Singleton
