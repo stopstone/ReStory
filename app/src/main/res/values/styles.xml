@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TransparentTitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/transparent</item>
+    </style>
+
+    <style name="CollapsedTitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/black</item> <!-- 원하는 색상으로 변경 -->
+    </style>
+
+    <style name="CustomChipStyle" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/color_choice_chip_background_color</item>
+        <item name="chipStrokeColor">@color/color_choice_chip_strokecolor_selector</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:textColor">@color/color_choice_chip_text_color</item>
+        <item name="android:textSize">14sp</item>
+        <item name="shapeAppearance">@style/CustomChipShape</item>
+    </style>
+
+    <style name="CustomChipShape" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">100dp</item>
+    </style>
+
+
+    <style name="ImageButtonStyle" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/ripple_background</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="AppRoundedImage">
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="AppRoundedImage.Small">
+        <item name="cornerSize">2dp</item>
+    </style>
+
+    <style name="CollapsedToolbarTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="ExpandedToolbarTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/transparent</item>
+    </style>
+
+</resources>

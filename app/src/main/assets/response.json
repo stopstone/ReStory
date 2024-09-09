@@ -1,0 +1,26 @@
+{
+  "home": {
+    "banners": [
+      {
+        "id": 1,
+        "image": "https://cdn.travie.com/news/photo/first/201711/img_20022_1.jpg",
+        "title": "다시 숨쉬는 공간,\n부산, F1963",
+        "subtitle": "버려진 공간에서 문화공간으로",
+        "badge": {
+          "label": "Editor's pick",
+          "background_color": "#514DFE"
+        }
+      },
+      {
+        "id": 2,
+        "image": "https://magazine.brique.co/wp-content/uploads/2020/06/%E1%84%8C%E1%85%AE%E1%86%BC%E1%84%85%E1%85%B5%E1%86%B7%E1%84%8E%E1%85%A1%E1%86%BC%E1%84%80%E1%85%A9-Junglim-Warehouse-%E1%84%8B%E1%85%A6%E1%84%87%E1%85%B3%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A1%E1%84%8F%E1%85%B5%E1%84%90%E1%85%A6%E1%86%A8%E1%84%8E%E1%85%B3-every-architects1-905x603.jpg",
+        "title": "중림창고\n복합문화공간",
+        "subtitle": "50년된 무허가 판자창의 재탄생",
+        "badge": {
+          "label": "Editor's pick",
+          "background_color": "#514DFE"
+        }
+      }
+    ]
+  }
+}

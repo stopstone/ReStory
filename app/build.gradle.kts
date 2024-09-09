@@ -1,9 +1,18 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("androidx.navigation.safeargs.kotlin")
+    id("kotlin-parcelize")
 }
+
+val localPropertiesFile = rootProject.file("local.properties")
+val properties = Properties()
+properties.load(FileInputStream(localPropertiesFile))
 
 android {
     namespace = "com.cyber.restory"
@@ -17,6 +26,15 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "API_URL", "\"${properties["API_URL"]}\"")
+        buildConfigField("String", "API_KEY", "\"${properties["kakaoapi.key"]}\"")
+        buildConfigField("String", "GREEN_TOUR_API_KEY", "\"${properties["greentour.key"]}\"")
+
+        val kakaoApiKey = properties["kakaoapi.key"] as String
+        manifestPlaceholders["KAKAO_API_KEY"] = kakaoApiKey
+
+
     }
 
     buildTypes {
@@ -30,6 +48,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -47,6 +66,9 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+    // Kakao Map
+    implementation ("com.kakao.maps.open:android:2.11.9")
 
     // Hilt
     implementation ("com.google.dagger:hilt-android:2.51.1")
@@ -77,6 +99,7 @@ dependencies {
 
     // Glide
     implementation("com.github.bumptech.glide:glide:4.11.0")
+    kapt("com.github.bumptech.glide:compiler:4.11.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
