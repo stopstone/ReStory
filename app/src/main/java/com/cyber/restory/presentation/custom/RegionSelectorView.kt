@@ -53,4 +53,8 @@ class RegionSelectorView @JvmOverloads constructor(
     }
 }
 
-data class Region(val code: String, val name: String)
+data class Region(
+    val code: String,
+    val name: String,
+    val cnt: Int = 0
+)

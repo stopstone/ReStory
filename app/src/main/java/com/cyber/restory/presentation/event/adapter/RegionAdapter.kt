@@ -1,7 +1,6 @@
 package com.cyber.restory.presentation.event.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -27,6 +26,7 @@ class RegionAdapter(private val onItemClick: (Region) -> Unit) :
         fun bind(region: Region, isSelected: Boolean) {
             binding.tvRegionName.text = region.name
             binding.tvRegionName.isSelected = isSelected
+            binding.tvRegionCount.text = "(${region.cnt})"
             itemView.setOnClickListener {
                 val previousSelected = selectedPosition
                 selectedPosition = adapterPosition
