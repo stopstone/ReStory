@@ -5,15 +5,8 @@
     tools:ignore="ContentDescription, UseCompoundDrawables">
 
     <data>
-
         <import type="android.view.View"/>
-
-        <variable
-            name="itemData"
-            type="com.cyber.restory.adapter.place.FilterItem" />
     </data>
-
-
 
         <TextView
             android:id="@+id/filterNameTextView"

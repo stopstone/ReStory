@@ -1,7 +1,7 @@
 package com.cyber.restory.data.repository
 
 import com.cyber.restory.data.api.ApiClient
-import com.cyber.restory.data.model.FilterTypeResponse
+import com.cyber.restory.data.model.postType.FilterTypeResponse
 import com.cyber.restory.domain.repository.FilterRepository
 import javax.inject.Inject
 

@@ -1,6 +1,6 @@
 package com.cyber.restory.domain.usecase
 
-import com.cyber.restory.data.model.FilterTypeResponse
+import com.cyber.restory.data.model.postType.FilterTypeResponse
 import com.cyber.restory.domain.repository.FilterRepository
 import javax.inject.Inject
 
