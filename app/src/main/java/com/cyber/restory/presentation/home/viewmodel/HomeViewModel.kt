@@ -3,11 +3,9 @@ package com.cyber.restory.presentation.home.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cyber.restory.data.model.FilterTypeResponse
+import com.cyber.restory.data.model.postType.FilterTypeResponse
 import com.cyber.restory.data.model.Post
-import com.cyber.restory.data.model.PostRequest
 import com.cyber.restory.domain.usecase.GetFilterTypesUseCase
-import com.cyber.restory.domain.usecase.GetPostDetailUseCase
 import com.cyber.restory.domain.usecase.GetPostsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -78,7 +76,7 @@ class HomeViewModel @Inject constructor(
             try {
                 Log.d("HomeViewModel", "게시글 요청 시작: 타입=$type, 페이지=$currentPage, 사이즈=$pageSize")
 
-                val result = getPostsUseCase(type, pageSize, currentPage)
+                val result = getPostsUseCase("", type, pageSize, currentPage)
 
                 Log.d("HomeViewModel", "게시글 요청 성공: 총 ${result.count}개의 게시글")
                 Log.d("HomeViewModel", "받은 게시글 목록: ${result.data.joinToString { it.title }}")

@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
@@ -20,8 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cyber.restory.R
-import com.cyber.restory.data.model.FilterTypeResponse
 import com.cyber.restory.data.model.Post
+import com.cyber.restory.data.model.postType.FilterTypeResponse
 import com.cyber.restory.databinding.FragmentHomeBinding
 import com.cyber.restory.presentation.home.adapter.ArticleThumbnailAdapter
 import com.cyber.restory.presentation.home.adapter.BannerAdapter
