@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBarLayout"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintBottom_toTopOf="@id/coordinatorLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/areaFilterTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="6dp"
+            android:text="전국"
+            android:textColor="#0066ff"
+            android:textSize="14sp"
+            android:drawableEnd="@drawable/ic_below_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="전국" />
+
+
+
+        <ImageView
+            android:id="@+id/searchImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="SearchIcon"
+            android:src="@drawable/ic_search"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--<com.kakao.vectormap.MapView
+        android:id="@+id/mapView"
+        android:layout_width="0dp"
+        android:layout_height="400dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>-->
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBarLayout">
+
+        <FrameLayout
+            android:id="@+id/frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.kakao.vectormap.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+            <TextView
+                android:id="@+id/listButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="100dp"
+                android:background="@drawable/bg_d9d9d9_round30"
+                android:drawableStart="@drawable/ic_list"
+                android:drawablePadding="12dp"
+                android:gravity="center"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="8dp"
+                android:text="리스트로 보기"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/filterList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:paddingStart="20dp"
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_filter_list" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/myLocationButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="end|bottom"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="105dp"
+                android:background="@color/white"
+                app:cardCornerRadius="100dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_my_location" />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_region_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="8dp"
+                android:background="@color/white"
+                android:visibility="gone"
+                tools:listitem="@layout/item_region"/>
+        </FrameLayout>
+        <!-- Persistent Bottom Sheet -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/persistent_bottom_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_top_round20_white"
+            android:elevation="16dp"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="150dp"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="40dp"
+                android:layout_height="6dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:background="@color/color_b1b1b1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- persistent bottom sheet의 Content -->
+            <TextView
+                android:id="@+id/placeNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="새들어린이공원"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/placeImageView"
+                app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+            <TextView
+                android:id="@+id/distanceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="200m"
+                android:textColor="#434343"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/placeNameTextView"
+                app:layout_constraintTop_toBottomOf="@+id/placeNameTextView" />
+
+            <TextView
+                android:id="@+id/addressTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="서울 서대문구 북아현로 34(북아현동)"
+                android:textColor="#727272"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="@id/distanceTextView"
+                app:layout_constraintStart_toEndOf="@+id/distanceTextView"
+                app:layout_constraintTop_toTopOf="@id/distanceTextView" />
+
+            <ImageView
+                android:id="@+id/placeImageView"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_mission"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/placeNameTextView" />
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="match_parent"
+                android:layout_height="0.3dp"
+                android:layout_marginTop="16dp"
+                android:background="#d3d3d3"
+                app:layout_constraintTop_toBottomOf="@+id/placeImageView" />
+
+            <TextView
+                android:id="@+id/typeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_0066ff_round30"
+                android:drawableStart="@drawable/ic_list_12"
+                android:drawablePadding="6dp"
+                android:drawableTint="@color/color_0066ff"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:text="카페"
+                android:textColor="@color/color_0066ff"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="@id/distanceTextView"
+                app:layout_constraintTop_toBottomOf="@id/distanceTextView" />
+            <!-- <ImageView
+                 android:id="@+id/imageView3"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:padding="12dp"
+                 android:src="@drawable/ic_search"
+                 app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+                 app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintTop_toTopOf="@+id/imageView4"
+                 app:tint="#696969" />
+
+             <ImageView
+                 android:id="@+id/imageView4"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:padding="12dp"
+                 android:src="@drawable/ic_list"
+                 app:layout_constraintBottom_toBottomOf="@+id/appCompatButton2"
+                 app:layout_constraintStart_toEndOf="@+id/imageView3"
+                 app:layout_constraintTop_toTopOf="@+id/appCompatButton2"
+                 app:tint="#696969" />
+
+             <androidx.appcompat.widget.AppCompatButton
+                 android:id="@+id/appCompatButton2"
+                 android:layout_width="72dp"
+                 android:layout_height="36dp"
+                 android:layout_marginEnd="8dp"
+                 android:text="출발"
+                 android:textColor="#0385FF"
+                 android:textSize="14sp"
+                 app:layout_constraintBottom_toBottomOf="@+id/appCompatButton"
+                 app:layout_constraintEnd_toStartOf="@+id/appCompatButton"
+                 app:layout_constraintTop_toTopOf="@+id/appCompatButton" />
+
+             <androidx.appcompat.widget.AppCompatButton
+                 android:id="@+id/appCompatButton"
+                 android:layout_width="72dp"
+                 android:layout_height="36dp"
+                 android:layout_margin="12dp"
+                 android:text="도착"
+                 android:textColor="@color/white"
+                 android:textSize="14sp"
+                 app:layout_constraintEnd_toEndOf="@+id/view3"
+                 app:layout_constraintTop_toBottomOf="@+id/view3" />-->
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    <!--<androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="8dp"
+        android:background="@color/material_dynamic_primary90"
+        android:layout_marginBottom="50dp">
+
+        <ImageView
+            android:id="@+id/listImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_list"
+            android:background="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:layout_marginStart="12dp"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toEndOf="@id/listImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/listImageView"
+            app:layout_constraintBottom_toBottomOf="@id/listImageView"
+            android:text="리스트로 보기" />
+    </androidx.constraintlayout.widget.ConstraintLayout>-->
+</androidx.constraintlayout.widget.ConstraintLayout>

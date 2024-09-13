@@ -21,10 +21,15 @@
             app:destination="@id/navigation_article" />
     </fragment>
     <fragment
-        android:id="@+id/navigation_mission"
-        android:name="com.cyber.restory.presentation.location.LocationFragment"
-        android:label="MissionFragment"
-        tools:layout="@layout/fragment_mission" />
+        android:id="@+id/navigation_place_map"
+        android:name="com.cyber.restory.presentation.place.PlaceMapFragment"
+        android:label="PlaceMapFragment"
+        tools:layout="@layout/fragment_place_map" >
+
+        <action
+            android:id="@+id/action_map_to_detail"
+            app:destination="@id/navigation_detail" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_mypage"
         android:name="com.cyber.restory.presentation.mypage.MyPageFragment"
