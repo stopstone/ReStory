@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ContentDescription, UseCompoundDrawables">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <variable
+            name="itemData"
+            type="com.cyber.restory.adapter.place.FilterItem" />
+    </data>
+
+
+
+        <TextView
+            android:id="@+id/filterNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_d9d9d9_white_round30"
+            android:drawableStart="@drawable/ic_list_12"
+            android:drawablePadding="6dp"
+            android:drawableTint="@color/color_b1b1b1"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp"
+            android:layout_marginEnd="8dp"
+            android:text="카페"
+            android:textColor="@color/color_b1b1b1"
+            android:textSize="12sp" />
+</layout>
