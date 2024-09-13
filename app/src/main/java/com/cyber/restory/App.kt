@@ -1,7 +1,6 @@
 package com.cyber.restory
 
 import android.app.Application
-import android.util.Log
 import com.cyber.restory.data.api.URL.KAKAO_API
 import com.kakao.vectormap.KakaoMapSdk
 import dagger.hilt.android.HiltAndroidApp
@@ -17,8 +16,11 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        initKakaoMap()
+    }
+
+    private fun initKakaoMap() {
         KakaoMapSdk.init(this, KAKAO_API)
-        Log.d("KakaoMapSdk", "KakaoMapSdk initialized: ${KakaoMapSdk.INSTANCE.hashKey}")
     }
 
 }
