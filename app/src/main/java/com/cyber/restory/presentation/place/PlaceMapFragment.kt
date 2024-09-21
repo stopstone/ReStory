@@ -90,8 +90,8 @@ class PlaceMapFragment : Fragment() {
 
     private fun initView() = with(binding) {
         searchImageView.setOnClickListener {
-            // TODO : 검색 페이지로 이동
-            ToastUtils.showTopToast("검색 페이지로 이동")
+            val action = PlaceMapFragmentDirections.actionPlaceMapToSearch()
+            findNavController().navigate(action)
         }
         areaFilterTextView.setOnClickListener {
             toggleRegionList()
