@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_map_to_detail"
             app:destination="@id/navigation_detail" />
+        <action
+            android:id="@+id/action_place_map_to_search"
+            app:destination="@id/navigation_search" />
     </fragment>
     <fragment
         android:id="@+id/navigation_mypage"
@@ -59,4 +62,9 @@
         android:name="com.cyber.restory.presentation.ArticleActivity"
         android:label="activity_article"
         tools:layout="@layout/activity_article" />
+    <activity
+        android:id="@+id/navigation_search"
+        android:name="com.cyber.restory.presentation.search.SearchActivity"
+        android:label="activity_search"
+        tools:layout="@layout/activity_search" />
 </navigation>
