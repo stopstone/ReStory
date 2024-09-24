@@ -102,9 +102,9 @@ class PlaceMapFragment : Fragment() {
         areaFilterTextView.setOnClickListener {
             toggleRegionList()
         }
-        myLocationButton.setOnClickListener {
+        /*myLocationButton.setOnClickListener {
             setupLocationPermission()
-        }
+        }*/
         setRegionRecyclerView()
     }
 
