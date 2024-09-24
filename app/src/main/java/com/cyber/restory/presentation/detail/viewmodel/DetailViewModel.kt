@@ -67,6 +67,7 @@ class DetailViewModel @Inject constructor(
                     if (places.isNotEmpty()) {
                         nearbyPlaceItems.add(NearbyPlaceItem.Title(titleMap[contentTypeId] ?: "주변 추천 장소"))
                         nearbyPlaceItems.add(NearbyPlaceItem.PlaceList(places.take(5)))
+                        Log.d("DetailViewModel", "추가된 장소 타입: ${titleMap[contentTypeId]}, 개수: ${places.take(5).size}")
                     }
                 }
 
@@ -78,6 +79,14 @@ class DetailViewModel @Inject constructor(
 
                 _nearbyPlaces.value = nearbyPlaceItems
                 Log.d("DetailViewModel", "주변 장소 정보 요청 성공: ${nearbyPlaceItems.size}개 아이템")
+
+                // 디버깅을 위한 로그 추가
+                nearbyPlaceItems.forEachIndexed { index, item ->
+                    when (item) {
+                        is NearbyPlaceItem.Title -> Log.d("DetailViewModel", "Item $index: Title - ${item.title}")
+                        is NearbyPlaceItem.PlaceList -> Log.d("DetailViewModel", "Item $index: PlaceList - ${item.places.size} places")
+                    }
+                }
             } catch (e: Exception) {
                 Log.e("DetailViewModel", "주변 장소 정보 요청 실패: ${e.message}", e)
             }

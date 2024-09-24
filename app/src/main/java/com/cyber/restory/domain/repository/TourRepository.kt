@@ -10,6 +10,7 @@ interface TourRepository {
         numOfRows: Int,
         mapX: String,
         mapY: String,
+        arrange: String = "O",
         radius: String,
         contentTypeId: String
     ): LocationBasedTourResponse
