@@ -1,4 +1,4 @@
-package com.cyber.restory.presentation.place
+package com.cyber.restory.presentation.place.map.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -47,7 +47,7 @@ class PlaceMapViewModel @Inject constructor(
         get() = _filterCategoryChangeEvent
 
     private var currentPage = 1
-    private val pageSize = 10
+    private val pageSize = 100
     private var _selectedType = MutableLiveData<FilterType>()
 
     private val _selectedRegion = MutableLiveData<Region?>(null)
