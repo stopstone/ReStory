@@ -1,15 +1,12 @@
-package com.cyber.restory.presentation.place
+package com.cyber.restory.presentation.place.map
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -27,10 +24,13 @@ import com.cyber.restory.adapter.place.PlaceFilterAdapter
 import com.cyber.restory.databinding.FragmentPlaceMapBinding
 import com.cyber.restory.presentation.custom.Region
 import com.cyber.restory.presentation.event.adapter.RegionAdapter
+import com.cyber.restory.presentation.place.map.viewmodel.PlaceMapViewModel
 import com.cyber.restory.utils.EventObserver
 import com.cyber.restory.utils.MapUtils.Companion.getCoordinate
 import com.cyber.restory.utils.ToastUtils
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -67,6 +67,8 @@ class PlaceMapFragment : Fragment() {
 
     private val regionAdapter: RegionAdapter by lazy { RegionAdapter(::onRegionSelected) }
 
+    lateinit var fusedLocationClient: FusedLocationProviderClient
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -79,13 +81,17 @@ class PlaceMapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        initFusedLocation(view)
         initView()
         observeEvent()
         initKakaoMap()
         initListButtonListener()
         persistentBottomSheetEvent()
 
+    }
+
+    private fun initFusedLocation(view: View) {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(view.context)
     }
 
     private fun initView() = with(binding) {
@@ -96,6 +102,9 @@ class PlaceMapFragment : Fragment() {
         areaFilterTextView.setOnClickListener {
             toggleRegionList()
         }
+        /*myLocationButton.setOnClickListener {
+            setupLocationPermission()
+        }*/
         setRegionRecyclerView()
     }
 
@@ -155,18 +164,6 @@ class PlaceMapFragment : Fragment() {
         }
     }
 
-    private fun createListButtonLayoutParams(value: Int) : FrameLayout.LayoutParams{
-        val dm = resources.displayMetrics
-        val size = Math.round(value * dm.density)
-        val param = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.WRAP_CONTENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT
-        )
-        param.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-        param.bottomMargin = size
-
-        return param
-    }
     private fun persistentBottomSheetEvent() {
         behavior = BottomSheetBehavior.from(binding.persistentBottomSheet)
         behavior.apply {
@@ -175,14 +172,10 @@ class PlaceMapFragment : Fragment() {
             addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
-                        BottomSheetBehavior.STATE_COLLAPSED -> {
-                            binding.listButton.layoutParams = createListButtonLayoutParams(160)
-                        }
+                        BottomSheetBehavior.STATE_COLLAPSED -> {}
                         BottomSheetBehavior.STATE_DRAGGING -> {}
                         BottomSheetBehavior.STATE_EXPANDED -> behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                        BottomSheetBehavior.STATE_HIDDEN -> {
-                            binding.listButton.layoutParams = createListButtonLayoutParams(100)
-                        }
+                        BottomSheetBehavior.STATE_HIDDEN -> {}
                         BottomSheetBehavior.STATE_SETTLING -> {}
                         BottomSheetBehavior.STATE_HALF_EXPANDED -> {}
                     }
@@ -193,9 +186,9 @@ class PlaceMapFragment : Fragment() {
     }
 
     private fun initListButtonListener() {
-        binding.listButton.setOnClickListener {
-            // TODO : 리스트 모드로 전환
-            ToastUtils.showToast("리스트 모드 준비중 입니다.")
+        binding.listImageView.setOnClickListener {
+            val action = PlaceMapFragmentDirections.actionMapToList()
+            findNavController().navigate(action)
         }
     }
 
@@ -266,8 +259,6 @@ class PlaceMapFragment : Fragment() {
 
     @SuppressLint("UseRequireInsteadOfGet")
     private fun setupLocationPermission() {
-        val fusedLocationProvideClient =
-            LocationServices.getFusedLocationProviderClient(App.instance)
         if (ActivityCompat.checkSelfPermission(
                 view?.context ?: App.instance,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -282,38 +273,8 @@ class PlaceMapFragment : Fragment() {
                 LOCATION_PERMISSION_REQUEST_CODE
             )
             return
-        }
-        fusedLocationProvideClient.lastLocation.addOnSuccessListener { success: Location? ->
-            success?.let { location ->
-                /*
-                * 좌표 location.latitude, location.longitude
-                * viewModel.getPlace(location.latitude, location.longitude)
-                * */
-
-                //
-                /*val pos = LatLng.from(location.latitude, location.longitude)
-                // 라벨 스타일 생성
-                val styles = kakaoMap.labelManager
-                    ?.addLabelStyles(
-                        LabelStyles.from(
-                            LabelStyle.from(R.drawable.ic_marker)
-                                .setIconTransition(LabelTransition.from(Transition.None, Transition.None))
-                        )
-                    )
-
-
-                // 라벨 생성
-                labelLayer?.addLabel(LabelOptions.from("iconLabel22", pos).setStyles(styles))
-
-                kakaoMap.moveCamera( CameraUpdateFactory.newCenterPosition(pos))*/
-
-                /*kakaoMap.moveCamera(
-                    CameraUpdateFactory.newCenterPosition(pos),
-                    //CameraUpdateFactory.newCenterPosition(pos, 15),
-                    CameraAnimation.from(duration)
-                )*/
-                //
-            }
+        } else {
+            getCurrentLocation()
         }
     }
 
@@ -326,11 +287,36 @@ class PlaceMapFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 사용자가 위치 권한을 허가했을 경우
                 ToastUtils.showToast("위치 권한이 동의 되었습니다.")
+                getCurrentLocation()
             } else {
+                // TODO : 위치 권한을 거부 했을 경우, Dialog를 호출하여 사용자에게 앱을 종료할지, 권한 설정 화면으로 이동할지 선택하도록 한다.
                 ToastUtils.showToast("권한에 동의하지 않을 경우 서비스 이용이 제한됩니다.")
             }
         }
+    }
+
+    private var currentPosition: LatLng? = null
+    @SuppressLint("MissingPermission")
+    private fun getCurrentLocation() {
+        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+            .addOnSuccessListener { location ->
+                if( location != null) {
+                    currentPosition = LatLng.from(location.latitude, location.longitude)
+                    // TODO : 재생공간 타입별 마커 아이콘 분기 처리
+                    /*val styles = kakaoMap.labelManager?.addLabelStyles(
+                        LabelStyles.from(
+                            LabelStyle.from(R.drawable.ic_red_marker)
+                                .setIconTransition(LabelTransition.from(Transition.None, Transition.None))
+                        )
+                    )
+                    // 라벨 생성
+                    labelLayer?.addLabel(LabelOptions.from("currentLabel_1", currentPosition).setStyles(styles))*/
+
+                    kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(currentPosition))
+                }
+            }
     }
 
 

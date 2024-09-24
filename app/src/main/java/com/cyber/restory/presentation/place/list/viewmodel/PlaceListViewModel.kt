@@ -1,4 +1,4 @@
-package com.cyber.restory.presentation.place
+package com.cyber.restory.presentation.place.list.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,18 +10,19 @@ import com.cyber.restory.domain.usecase.GetCityFiltersUseCase
 import com.cyber.restory.domain.usecase.GetFilterTypesUseCase
 import com.cyber.restory.domain.usecase.GetPostsUseCase
 import com.cyber.restory.presentation.custom.Region
+import com.cyber.restory.presentation.place.list.PostItem
 import com.cyber.restory.utils.Event
+import com.cyber.restory.utils.MapUtils
+import com.kakao.vectormap.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class PlaceMapViewModel @Inject constructor(
+class PlaceListViewModel @Inject constructor(
     private val getFilterTypesUseCase: GetFilterTypesUseCase,
     private val getPostsUseCase: GetPostsUseCase,
     private val getCityFiltersUseCase: GetCityFiltersUseCase
@@ -34,13 +35,9 @@ class PlaceMapViewModel @Inject constructor(
     private val _cityFilters = MutableStateFlow<List<Region>>(emptyList())
     val cityFilters: StateFlow<List<Region>> = _cityFilters.asStateFlow()
 
-    private val _placeList = MutableLiveData<List<Post>>()
-    val placeList: LiveData<List<Post>>
+    private val _placeList = MutableLiveData<List<PostItem>>()
+    val placeList: LiveData<List<PostItem>>
         get() = _placeList
-
-    private var _setBottomSheetDataEvent = MutableLiveData<Event<List<Post>>>()
-    val setBottomSheetDataEvent: LiveData<Event<List<Post>>>
-        get() = _setBottomSheetDataEvent
 
     private var _filterCategoryChangeEvent = MutableLiveData<Event<FilterType?>>()
     val filterCategoryChangeEvent: LiveData<Event<FilterType?>>
@@ -54,12 +51,16 @@ class PlaceMapViewModel @Inject constructor(
     val selectedRegion: LiveData<Region?>
         get() = _selectedRegion
 
+    private var _selectedCityEvent = MutableLiveData<Event<String>>()
+    val selectedCityEvent: LiveData<Event<String>>
+        get() = _selectedCityEvent
+
+
     init {
         initFilter()
     }
     fun init() {
         fetchFilterData()
-        fetchPlaceData()
         getCityFilters()
     }
 
@@ -85,22 +86,38 @@ class PlaceMapViewModel @Inject constructor(
         }
     }
 
-    fun fetchPlaceData(city: String? = "", type: String? = "") {
+    fun fetchPlaceData(city: String? = "", type: String? = "", pos: LatLng? = null) {
         viewModelScope.launch {
             val posts = getPostsUseCase(city, if(type == "ALL")  "" else type, pageSize, currentPage).data
-            _placeList.value = posts
-        }
-    }
-
-    fun getSelectPlaceData(lat: Double, lon: Double){
-        viewModelScope.launch(Dispatchers.IO) {
-            val selectData = withContext(Dispatchers.IO) {
-                _placeList.value?.filter { data ->
-                    data.latitude == lat && data.longitude == lon
-                } ?: emptyList()
-            }
-            withContext(Dispatchers.Main) {
-                _setBottomSheetDataEvent.value = Event(selectData)
+            _placeList.value = posts.map { post ->
+                PostItem(
+                    id = post.id,
+                    title = post.title,
+                    type = post.type,
+                    summary = post.summary,
+                    content = post.content,
+                    subContent = post.subContent,
+                    city = post.city,
+                    address = post.address,
+                    latitude = post.latitude,
+                    longitude = post.longitude,
+                    remark = post.remark,
+                    telephone = post.telephone,
+                    duration = post.duration,
+                    holiday = post.holiday,
+                    url = post.url,
+                    postImages = post.postImages,
+                    selectedLatitude = pos?.latitude ?: MapUtils.getCoordinate(_selectedRegion.value).first,
+                    selectedLongitude = pos?.longitude ?: MapUtils.getCoordinate(_selectedRegion.value).second,
+                    distance = MapUtils.getDistance(
+                        post.latitude,
+                        post.longitude,
+                        pos?.latitude ?: MapUtils.getCoordinate(_selectedRegion.value).first,
+                        pos?.longitude ?: MapUtils.getCoordinate(_selectedRegion.value).second
+                        )
+                )
+            }.sortedBy { item ->
+                item.distance
             }
         }
     }
@@ -128,5 +145,9 @@ class PlaceMapViewModel @Inject constructor(
     fun setSelectedRegion(region: Region) {
         _selectedRegion.value = region
         fetchPlaceData(region.code, _selectedType.value?.code ?: "ALL")
+    }
+
+    fun getSelectedRegion() {
+        _selectedCityEvent.value = Event(_selectedRegion.value?.code ?: "ALL")
     }
 }
