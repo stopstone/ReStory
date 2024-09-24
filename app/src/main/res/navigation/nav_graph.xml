@@ -22,14 +22,26 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_place_map"
-        android:name="com.cyber.restory.presentation.place.PlaceMapFragment"
+        android:name="com.cyber.restory.presentation.place.map.PlaceMapFragment"
         android:label="PlaceMapFragment"
         tools:layout="@layout/fragment_place_map" >
 
         <action
             android:id="@+id/action_map_to_detail"
             app:destination="@id/navigation_detail" />
+
+        <action
+            android:id="@+id/action_map_to_list"
+            app:destination="@+id/navigation_place_list"/>
     </fragment>
+
+    <activity
+        android:id="@+id/navigation_place_list"
+        android:name="com.cyber.restory.presentation.place.list.PlaceListActivity"
+        android:label="PlaceListActivity"
+        tools:layout="@layout/activity_place_list">
+    </activity>
+
     <fragment
         android:id="@+id/navigation_mypage"
         android:name="com.cyber.restory.presentation.mypage.MyPageFragment"
