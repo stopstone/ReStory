@@ -3,10 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.cyber.restory">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -17,15 +13,20 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ReStory"
         tools:targetApi="31">
+        <activity
+            android:name=".presentation.search.SearchActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="com.kakao.vectormap.AppKey"
-            android:value="KAKAO_API_KEY"/>
+            android:value="KAKAO_API_KEY" />
+
         <activity
             android:name=".presentation.ArticleActivity"
             android:exported="false" />
@@ -48,7 +49,7 @@
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="KAKAO_API_KEY"/>
+            android:value="KAKAO_API_KEY" />
     </application>
 
 </manifest>

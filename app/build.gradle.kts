@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     kotlin("kapt")
+    id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
     id("androidx.navigation.safeargs.kotlin")
     id("kotlin-parcelize")
@@ -48,6 +49,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        dataBinding = true
         buildConfig = true
     }
     compileOptions {
@@ -67,11 +69,18 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
+    // Room
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
     // Kakao Map
     implementation ("com.kakao.maps.open:android:2.11.9")
 
     // Hilt
     implementation ("com.google.dagger:hilt-android:2.51.1")
+    implementation(libs.play.services.location)
     kapt ("com.google.dagger:hilt-compiler:2.51.1")
 
     // JetpackNavigation
