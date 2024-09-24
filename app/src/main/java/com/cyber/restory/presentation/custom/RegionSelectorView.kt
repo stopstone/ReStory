@@ -1,6 +1,7 @@
 package com.cyber.restory.presentation.custom
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +20,7 @@ class RegionSelectorView @JvmOverloads constructor(
         onRegionSelected(region)
     }
     private var isExpanded = false
+    private var onRegionSelectedListener: ((Region) -> Unit)? = null
 
     init {
         initView()
@@ -32,6 +34,9 @@ class RegionSelectorView @JvmOverloads constructor(
         binding.btnSelector.setOnClickListener {
             toggleExpanded()
         }
+
+        setBackgroundColor(Color.WHITE)
+        Log.d("RegionSelectorView", "배경색을 흰색으로 설정")
     }
 
     private fun toggleExpanded() {
@@ -42,14 +47,22 @@ class RegionSelectorView @JvmOverloads constructor(
     }
 
     private fun onRegionSelected(region: Region) {
-        binding.btnSelector.text = region.name
+        binding.btnSelector.text = "${region.name} (${region.cnt})"
         toggleExpanded()
-        Log.d("RegionSelectorView", "선택된 지역: ${region.name}")
+        Log.d("RegionSelectorView", "선택된 지역: ${region.name}, 카운트: ${region.cnt}")
+        onRegionSelectedListener?.invoke(region)
     }
 
     fun setRegions(regions: List<Region>) {
         adapter.submitList(regions)
         Log.d("RegionSelectorView", "지역 목록 설정 완료. 총 ${regions.size}개의 지역")
+        if (regions.isNotEmpty()) {
+            binding.btnSelector.text = "${regions[0].name} (${regions[0].cnt})"
+        }
+    }
+
+    fun setOnRegionSelectedListener(listener: (Region) -> Unit) {
+        onRegionSelectedListener = listener
     }
 }
 
