@@ -32,6 +32,16 @@
             tools:text="전국" />
 
 
+        <ImageView
+            android:id="@+id/listImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="ListIcon"
+            android:src="@drawable/ic_list"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toStartOf="@id/searchImageView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/searchImageView"
@@ -74,24 +84,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-
-            <TextView
-                android:id="@+id/listButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center"
-                android:layout_marginStart="12dp"
-                android:layout_marginBottom="100dp"
-                android:background="@drawable/bg_d9d9d9_round30"
-                android:drawableStart="@drawable/ic_list"
-                android:drawablePadding="12dp"
-                android:gravity="center"
-                android:paddingHorizontal="24dp"
-                android:paddingVertical="8dp"
-                android:text="리스트로 보기"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/filterList"
                 android:layout_width="match_parent"
@@ -103,13 +95,15 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_filter_list" />
 
+           <!--
+           TODO : 현재 위치 아이콘 표시 오류 조치
             <androidx.cardview.widget.CardView
                 android:id="@+id/myLocationButton"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:layout_gravity="end|bottom"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="105dp"
+                android:layout_gravity="start|bottom"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="150dp"
                 android:background="@color/white"
                 app:cardCornerRadius="100dp">
 
@@ -119,7 +113,7 @@
                     android:layout_gravity="center"
                     android:src="@drawable/ic_my_location" />
 
-            </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>-->
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_region_list"
