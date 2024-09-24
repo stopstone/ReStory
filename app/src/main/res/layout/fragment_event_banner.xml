@@ -62,6 +62,7 @@
         android:layout_marginHorizontal="20dp"
         android:paddingVertical="8dp"
         android:visibility="gone"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_event_banner_title" />
