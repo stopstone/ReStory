@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyber.restory.databinding.FragmentRecentSearchBinding
 import com.cyber.restory.presentation.search.adapter.SearchHistoryAdapter
+import com.cyber.restory.presentation.search.adapter.RecommendTagAdapter
 import com.cyber.restory.presentation.search.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ class RecentSearchFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: SearchViewModel by activityViewModels()
     private lateinit var searchHistoryAdapter: SearchHistoryAdapter
+    private lateinit var recommendTagAdapter: RecommendTagAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRecentSearchBinding.inflate(inflater, container, false)
@@ -28,7 +30,7 @@ class RecentSearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
+        setupRecyclerViews()
         observeViewModel()
         showKeyboard()
 
@@ -37,7 +39,12 @@ class RecentSearchFragment : Fragment() {
         }
     }
 
-    private fun setupRecyclerView() {
+    private fun setupRecyclerViews() {
+        setupSearchHistoryRecyclerView()
+        setupRecommendTagRecyclerView()
+    }
+
+    private fun setupSearchHistoryRecyclerView() {
         searchHistoryAdapter = SearchHistoryAdapter(
             onItemClick = { search ->
                 (activity as? SearchActivity)?.onRecentSearchClick(search)
@@ -48,6 +55,16 @@ class RecentSearchFragment : Fragment() {
         )
         binding.rvSearchHistoryList.apply {
             adapter = searchHistoryAdapter
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        }
+    }
+
+    private fun setupRecommendTagRecyclerView() {
+        recommendTagAdapter = RecommendTagAdapter { tag ->
+            (activity as? SearchActivity)?.onTagClick(tag.name)
+        }
+        binding.rvSearchRecommendTagList.apply {
+            adapter = recommendTagAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
     }
@@ -63,6 +80,12 @@ class RecentSearchFragment : Fragment() {
                     binding.groupRecentSearchesEmpty.visibility = View.GONE
                     searchHistoryAdapter.submitList(searches)
                 }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.recommendedTags.collect { tags ->
+                recommendTagAdapter.submitList(tags)
             }
         }
     }
