@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     kotlin("kapt")
+    id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
     id("androidx.navigation.safeargs.kotlin")
     id("kotlin-parcelize")
@@ -22,8 +23,8 @@ android {
         applicationId = "com.cyber.restory"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -46,16 +47,19 @@ android {
             )
         }
     }
+    dataBinding {
+        enable = true
+    }
     buildFeatures {
         viewBinding = true
         buildConfig = true
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }
 
@@ -66,6 +70,12 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 
     // Kakao Map
     implementation ("com.kakao.maps.open:android:2.11.9")
@@ -100,6 +110,12 @@ dependencies {
     // Glide
     implementation("com.github.bumptech.glide:glide:4.11.0")
     kapt("com.github.bumptech.glide:compiler:4.11.0")
+
+    implementation ("com.google.android.gms:play-services-location:21.2.0")
+
+    // Firebase bom
+    implementation(platform(libs.firebase.bom))
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
