@@ -22,8 +22,30 @@ class MyPageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupClickListeners()
     }
 
+    private fun setupClickListeners() {
+        binding.sivRegisterSpace.setOnClickListener {
+            // Handle register space click
+        }
+
+        binding.sivServiceInquiry.setOnClickListener {
+            // Handle service inquiry click
+        }
+
+        binding.sivShareService.setOnClickListener {
+            // Handle share service click
+        }
+
+        binding.sivNotice.setOnClickListener {
+            // Handle notice click
+        }
+
+        binding.sivTerms.setOnClickListener {
+            // Handle terms click
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

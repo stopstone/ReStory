@@ -52,6 +52,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        dataBinding = true
         buildConfig = true
     }
     compileOptions {
@@ -82,6 +83,7 @@ dependencies {
 
     // Hilt
     implementation ("com.google.dagger:hilt-android:2.51.1")
+    implementation(libs.play.services.location)
     kapt ("com.google.dagger:hilt-compiler:2.51.1")
 
     // JetpackNavigation

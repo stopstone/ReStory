@@ -9,21 +9,14 @@ class GetNearbyPlacesUseCase @Inject constructor(
     private val tourRepository: TourRepository
 ) {
     suspend operator fun invoke(latitude: Double, longitude: Double, type: String): List<LocationBasedTourItem> {
-        val contentTypeId = when (type) {
-            "카페" -> "12,14" // 관광지, 문화시설
-            "숙박" -> "39,12" // 음식점, 관광지
-            "문화공간" -> "39" // 음식점
-            "체험" -> "12,28" // 관광지, 레포츠
-            else -> "12" // 기본적으로 관광지
-        }
-
         Log.d("GetNearbyPlacesUseCase", "주변 장소 요청 시작: 위도=$latitude, 경도=$longitude, 타입=$type")
         val response = tourRepository.getLocationBasedTourInfo(
             numOfRows = 5,
             mapX = longitude.toString(),
             mapY = latitude.toString(),
-            radius = "30000", // 3km
-            contentTypeId = contentTypeId
+            arrange = "O",
+            radius = "20000", // 3km
+            contentTypeId = type
         )
 
         return response.response.body.items.item.map { item ->

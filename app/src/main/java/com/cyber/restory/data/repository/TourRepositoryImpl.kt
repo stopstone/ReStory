@@ -18,8 +18,9 @@ class TourRepositoryImpl @Inject constructor(
             ?: throw IllegalArgumentException("잘못된 지역명: ${region.name}")
 
         return tourApiService.getGreenTourInfo(
-            numOfRows = 10,
+            numOfRows = 50,
             pageNo = 1,
+            arrange = "R",
             mobileOS = "AND",
             mobileApp = "Restory",
             areaCode = regionCode,
@@ -32,6 +33,7 @@ class TourRepositoryImpl @Inject constructor(
         numOfRows: Int,
         mapX: String,
         mapY: String,
+        arrange: String,
         radius: String,
         contentTypeId: String
     ): LocationBasedTourResponse {
@@ -42,6 +44,7 @@ class TourRepositoryImpl @Inject constructor(
             mobileOS = "AND",
             mobileApp = "Restory",
             type = "json",
+            arrange = arrange,
             mapX = mapX,
             mapY = mapY,
             radius = radius,
