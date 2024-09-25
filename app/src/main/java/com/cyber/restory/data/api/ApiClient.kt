@@ -41,4 +41,15 @@ interface ApiClient {
     * */
     @GET("tags")
     suspend fun getTags(): TagsResponse
+
+
+    /*
+    * 검색 결과 요청
+    * */
+    @GET("posts")
+    suspend fun getPostsByTag(
+        @Query("tagId") tagId: Int,
+        @Query("size") size: Int? = 100,
+        @Query("page") page: Int? = 1
+    ): PostResponse
 }

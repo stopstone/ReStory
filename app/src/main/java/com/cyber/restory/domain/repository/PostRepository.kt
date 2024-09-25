@@ -4,6 +4,7 @@ import com.cyber.restory.data.model.Post
 import com.cyber.restory.data.model.PostResponse
 
 interface PostRepository {
-    suspend fun getPosts(city:String?, type: String?, size: Int?, page: Int?): PostResponse
+    suspend fun getPosts(city: String?, type: String?, size: Int?, page: Int?): PostResponse
     suspend fun getPostDetail(id: Int): Post
+    suspend fun getPostsByTag(tagId: Int, size: Int?, page: Int?): PostResponse
 }
