@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "101110321612",
+    "project_id": "restory-c74d2",
+    "storage_bucket": "restory-c74d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:101110321612:android:e7d21f65c79cd0b1784d69",
+        "android_client_info": {
+          "package_name": "com.cyber.restory"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrn3lsLwfSYPxJ6lU2Y3hr-iIlHbrvcgU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
