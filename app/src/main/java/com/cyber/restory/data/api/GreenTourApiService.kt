@@ -8,7 +8,7 @@ import retrofit2.http.Query
 interface TourApiService {
     @GET("B551011/GreenTourService1/areaBasedList1")
     suspend fun getGreenTourInfo(
-        @Query("numOfRows") numOfRows: Int = 100,
+        @Query("numOfRows") numOfRows: Int = 50,
         @Query("pageNo") pageNo: Int,
         @Query("MobileOS") mobileOS: String,
         @Query("arrange") arrange: String,
@@ -20,7 +20,7 @@ interface TourApiService {
 
     @GET("B551011/KorService1/locationBasedList1")
     suspend fun getLocationBasedTourInfo(
-        @Query("numOfRows") numOfRows: Int = 100,
+        @Query("numOfRows") numOfRows: Int = 50,
         @Query("pageNo") pageNo: Int,
         @Query("MobileOS") mobileOS: String,
         @Query("MobileApp") mobileApp: String,

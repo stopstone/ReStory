@@ -47,6 +47,11 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    fun onTagClick(tagName: String) {
+        setSearchQuery(tagName)
+        performSearch()
+    }
+
     private fun performSearch() {
         val query = binding.etSearch.text.toString().trim()
         if (query.isNotEmpty()) {

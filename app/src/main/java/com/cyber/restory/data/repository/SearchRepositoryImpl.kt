@@ -1,13 +1,16 @@
 package com.cyber.restory.data.repository
 
+import com.cyber.restory.data.api.ApiClient
 import com.cyber.restory.data.db.RecentSearchDao
+import com.cyber.restory.data.model.TagsResponse
 import com.cyber.restory.data.model.entity.RecentSearch
 import com.cyber.restory.domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor(
-    private val recentSearchDao: RecentSearchDao
+    private val recentSearchDao: RecentSearchDao,
+    private val apiClient: ApiClient,
 ) : SearchRepository {
     override fun getRecentSearches(): Flow<List<RecentSearch>> =
         recentSearchDao.getRecentSearches()
@@ -32,5 +35,9 @@ class SearchRepositoryImpl @Inject constructor(
 
     override suspend fun deleteAllSearches() {
         recentSearchDao.deleteAllSearches()
+    }
+
+    override suspend fun getRecommendedTags(): TagsResponse {
+        return apiClient.getTags()
     }
 }

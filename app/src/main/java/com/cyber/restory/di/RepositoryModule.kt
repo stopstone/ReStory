@@ -48,7 +48,7 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideSearchRepository(dao: RecentSearchDao): SearchRepository {
-        return SearchRepositoryImpl(dao)
+    fun provideSearchRepository(dao: RecentSearchDao, apiService: ApiClient): SearchRepository {
+        return SearchRepositoryImpl(dao, apiService)
     }
 }
