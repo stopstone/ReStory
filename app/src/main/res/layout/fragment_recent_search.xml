@@ -63,41 +63,10 @@
         app:layout_constraintTop_toBottomOf="@id/tv_search_recommend_tag_label"
         tools:listitem="@layout/item_recommend_tag_list" />
 
-    <TextView
-        android:id="@+id/tv_search_history_empty_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="최근 검색 내역이 없습니다."
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_search_history_empty_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:text="관심있는 태그를 검색해주세요."
-        android:textSize="12sp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@id/tv_search_history_empty_title"
-        app:layout_constraintStart_toStartOf="@id/tv_search_history_empty_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_search_history_empty_title" />
-
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group_recent_searches"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="tv_clear_all,rv_search_history_list" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group_recent_searches_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="tv_search_history_empty_title,tv_search_history_empty_description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

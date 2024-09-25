@@ -2,6 +2,7 @@ package com.cyber.restory.presentation.search
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
@@ -28,7 +29,6 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        showKeyboard()
         binding.btnBack.setOnClickListener {
             finish()
         }
@@ -47,32 +47,33 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    fun onTagClick(tagName: String) {
-        setSearchQuery(tagName)
-        performSearch()
-    }
-
     private fun performSearch() {
         val query = binding.etSearch.text.toString().trim()
         if (query.isNotEmpty()) {
+            Log.d("SearchActivity", "검색 수행: '$query'")
             viewModel.searchPosts(query)
-//            showSearchResultFragment()
+            showSearchResultFragment()
             hideKeyboard()
+        } else {
+            Log.d("SearchActivity", "검색어가 비어있음")
         }
     }
 
     private fun setSearchQuery(query: String) {
+        Log.d("SearchActivity", "검색어 설정: '$query'")
         binding.etSearch.setText(query)
         binding.etSearch.setSelection(query.length)
     }
 
     private fun showRecentSearchFragment() {
+        Log.d("SearchActivity", "최근 검색 화면 표시")
         supportFragmentManager.commit {
             replace(binding.fragmentContainer.id, RecentSearchFragment.newInstance())
         }
     }
 
-    private fun showSearchResultFragment() {
+    fun showSearchResultFragment() {
+        Log.d("SearchActivity", "검색 결과 화면으로 전환")
         supportFragmentManager.commit {
             replace(binding.fragmentContainer.id, ResultSearchFragment.newInstance())
             addToBackStack(null)
@@ -80,16 +81,19 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun hideKeyboard() {
+        Log.d("SearchActivity", "키보드 숨기기")
         val imm = getSystemService<InputMethodManager>()
         imm?.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
     }
 
     fun onRecentSearchClick(recentSearch: RecentSearch) {
+        Log.d("SearchActivity", "최근 검색어 클릭: '${recentSearch.query}'")
         setSearchQuery(recentSearch.query)
         performSearch()
     }
 
     fun showKeyboard() {
+        Log.d("SearchActivity", "키보드 표시")
         val view = binding.etSearch
         view.requestFocus()
         view.postDelayed({
