@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.cyber.restory.databinding.FragmentMypageBinding
@@ -36,7 +37,7 @@ class MyPageFragment : Fragment() {
         }
 
         binding.sivShareService.setOnClickListener {
-            // Handle share service click
+            Toast.makeText(context, "준비중입니다.", Toast.LENGTH_SHORT).show()
         }
 
         binding.sivNotice.setOnClickListener {
