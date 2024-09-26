@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.cyber.restory.databinding.FragmentMypageBinding
 
 class MyPageFragment : Fragment() {
@@ -39,11 +40,8 @@ class MyPageFragment : Fragment() {
         }
 
         binding.sivNotice.setOnClickListener {
-            // Handle notice click
-        }
-
-        binding.sivTerms.setOnClickListener {
-            // Handle terms click
+            val action = MyPageFragmentDirections.actionMypageToNotice()
+            findNavController().navigate(action)
         }
     }
 

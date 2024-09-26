@@ -49,7 +49,11 @@
         android:id="@+id/navigation_mypage"
         android:name="com.cyber.restory.presentation.mypage.MyPageFragment"
         android:label="MyPageFragment"
-        tools:layout="@layout/fragment_mypage" />
+        tools:layout="@layout/fragment_mypage" >
+        <action
+            android:id="@+id/action_mypage_to_notice"
+            app:destination="@id/navigation_notice" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_event_banner"
         android:name="com.cyber.restory.presentation.event.EventBannerFragment"
@@ -79,4 +83,9 @@
         android:name="com.cyber.restory.presentation.search.SearchActivity"
         android:label="activity_search"
         tools:layout="@layout/activity_search" />
+    <activity
+        android:id="@+id/navigation_notice"
+        android:name="com.cyber.restory.presentation.notice.NoticeActivity"
+        android:label="activity_notice"
+        tools:layout="@layout/activity_notice" />
 </navigation>
