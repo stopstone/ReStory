@@ -16,15 +16,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <TextView
-                android:id="@+id/tvServiceUsage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="서비스 이용"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp"/>
-
             <com.cyber.restory.presentation.custom.SettingsItemView
                 android:id="@+id/sivRegisterSpace"
                 android:layout_width="match_parent"
@@ -46,28 +37,11 @@
                 app:settingsItemText="서비스 공유"
                 app:settingsItemIcon="@drawable/ic_share"/>
 
-            <TextView
-                android:id="@+id/tvInfoAndAds"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="정보 및 공지"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"/>
-
             <com.cyber.restory.presentation.custom.SettingsItemView
                 android:id="@+id/sivNotice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:settingsItemText="공지사항"
-                app:settingsItemIcon="@drawable/ic_arrow_forward"/>
-
-            <com.cyber.restory.presentation.custom.SettingsItemView
-                android:id="@+id/sivTerms"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:settingsItemText="이용 약관 및 정책"
                 app:settingsItemIcon="@drawable/ic_arrow_forward"/>
 
             <TextView

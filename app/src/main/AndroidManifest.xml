@@ -20,6 +20,12 @@
         android:theme="@style/Theme.ReStory"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.contact.ContactActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.notice.NoticeActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.search.SearchActivity"
             android:exported="false" />
 
@@ -33,9 +39,9 @@
         <activity
             android:name=".presentation.detail.DetailActivity"
             android:exported="false" />
-
-        <activity android:name=".presentation.place.list.PlaceListActivity"
-            android:exported="false"/>
+        <activity
+            android:name=".presentation.place.list.PlaceListActivity"
+            android:exported="false" />
         <activity
             android:name=".presentation.splash.SplashActivity"
             android:exported="true">
