@@ -21,9 +21,9 @@ import com.cyber.restory.presentation.detail.DetailActivity
 import com.cyber.restory.presentation.event.adapter.RegionAdapter
 import com.cyber.restory.presentation.place.list.adapter.PlaceAdapter
 import com.cyber.restory.presentation.place.list.viewmodel.PlaceListViewModel
+import com.cyber.restory.presentation.search.SearchActivity
 import com.cyber.restory.utils.EventObserver
 import com.cyber.restory.utils.MapUtils
-import com.cyber.restory.utils.ToastUtils
 import com.google.android.gms.location.LocationServices
 import com.kakao.vectormap.LatLng
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,9 +51,10 @@ class PlaceListActivity: AppCompatActivity() {
     }
 
     private fun initView() = with(binding){
+        // 검색 아이콘 클릭
         searchImageView.setOnClickListener {
-            // TODO : 검색 페이지로 이동
-            ToastUtils.showTopToast("검색 페이지로 이동")
+            val intent = Intent(this@PlaceListActivity, SearchActivity::class.java)
+            startActivity(intent)
         }
         areaFilterTextView.setOnClickListener {
             toggleRegionList()
