@@ -29,11 +29,12 @@ class MyPageFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.sivRegisterSpace.setOnClickListener {
-            // Handle register space click
+            val action = MyPageFragmentDirections.actionMypageToContact()
+            findNavController().navigate(action)
         }
 
         binding.sivServiceInquiry.setOnClickListener {
-            // Handle service inquiry click
+
         }
 
         binding.sivShareService.setOnClickListener {

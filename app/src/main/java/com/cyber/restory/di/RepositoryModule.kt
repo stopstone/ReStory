@@ -4,12 +4,14 @@ import com.cyber.restory.data.api.ApiClient
 import com.cyber.restory.data.api.TourApiService
 import com.cyber.restory.data.db.RecentSearchDao
 import com.cyber.restory.data.repository.CityRepositoryImpl
+import com.cyber.restory.data.repository.ContactRepositoryImpl
 import com.cyber.restory.data.repository.FilterRepositoryImpl
 import com.cyber.restory.data.repository.NoticeRepositoryImpl
 import com.cyber.restory.data.repository.PostRepositoryImpl
 import com.cyber.restory.data.repository.SearchRepositoryImpl
 import com.cyber.restory.data.repository.TourRepositoryImpl
 import com.cyber.restory.domain.repository.CityRepository
+import com.cyber.restory.domain.repository.ContactRepository
 import com.cyber.restory.domain.repository.FilterRepository
 import com.cyber.restory.domain.repository.NoticeRepository
 import com.cyber.restory.domain.repository.PostRepository
@@ -58,5 +60,11 @@ object RepositoryModule {
     @Singleton
     fun provideNoticeRepository(): NoticeRepository {
         return NoticeRepositoryImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun provideContactRepository(): ContactRepository {
+        return ContactRepositoryImpl()
     }
 }

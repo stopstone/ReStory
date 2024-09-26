@@ -53,6 +53,9 @@
         <action
             android:id="@+id/action_mypage_to_notice"
             app:destination="@id/navigation_notice" />
+        <action
+            android:id="@+id/action_mypage_to_contact"
+            app:destination="@id/navigation_contact" />
     </fragment>
     <fragment
         android:id="@+id/navigation_event_banner"
@@ -88,4 +91,8 @@
         android:name="com.cyber.restory.presentation.notice.NoticeActivity"
         android:label="activity_notice"
         tools:layout="@layout/activity_notice" />
+    <activity
+        android:id="@+id/navigation_contact"
+        android:name="com.cyber.restory.presentation.contact.ContactActivity"
+        android:label="ContactActivity" />
 </navigation>

@@ -20,6 +20,9 @@
         android:theme="@style/Theme.ReStory"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.contact.ContactActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.notice.NoticeActivity"
             android:exported="false" />
         <activity
