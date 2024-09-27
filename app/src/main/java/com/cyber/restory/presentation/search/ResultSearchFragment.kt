@@ -1,5 +1,6 @@
 package com.cyber.restory.presentation.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,8 +9,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyber.restory.databinding.FragmentSearchResultBinding
+import com.cyber.restory.presentation.detail.DetailActivity
 import com.cyber.restory.presentation.search.adapter.SearchResultAdapter
 import com.cyber.restory.presentation.search.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +40,10 @@ class ResultSearchFragment : Fragment() {
 
     private fun setupRecyclerView() {
         Log.d("ResultSearchFragment", "RecyclerView 설정 시작")
-        searchResultAdapter = SearchResultAdapter()
+        searchResultAdapter = SearchResultAdapter { post ->
+            Log.d("ResultSearchFragment", "포스트 클릭됨: id=${post.id}, 제목='${post.title}'")
+            viewModel.onPostItemClick(post.id)
+        }
         binding.rvSearchResults.apply {
             adapter = searchResultAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -46,12 +52,23 @@ class ResultSearchFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        Log.d("ResultSearchFragment", "ViewModel 관찰 시작")
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.searchResults.collect { posts ->
                 Log.d("ResultSearchFragment", "검색 결과 업데이트: ${posts.size}개의 게시글")
                 searchResultAdapter.submitList(posts)
                 updateUiVisibility(posts.isEmpty())
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.selectedPostDetail.collect { postDetail ->
+                postDetail?.let {
+                    // 재생공간 상세로 이동
+                    val intent = Intent(context, DetailActivity::class.java).apply {
+                        putExtra("postId", postDetail.id)
+                    }
+                    startActivity(intent)
+                }
             }
         }
     }
@@ -70,13 +87,11 @@ class ResultSearchFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d("ResultSearchFragment", "onDestroyView 호출: 뷰 바인딩 해제")
         _binding = null
     }
 
     companion object {
         fun newInstance(): ResultSearchFragment {
-            Log.d("ResultSearchFragment", "newInstance 호출: 새 인스턴스 생성")
             return ResultSearchFragment()
         }
     }

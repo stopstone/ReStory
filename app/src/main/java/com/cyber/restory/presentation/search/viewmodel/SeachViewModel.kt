@@ -8,6 +8,7 @@ import com.cyber.restory.data.model.Post
 import com.cyber.restory.data.model.Tag
 import com.cyber.restory.domain.usecase.search.*
 import com.cyber.restory.domain.repository.PostRepository
+import com.cyber.restory.domain.usecase.GetPostDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +23,7 @@ class SearchViewModel @Inject constructor(
     private val clearRecentSearchesUseCase: ClearRecentSearchesUseCase,
     private val getRecentSearchesUseCase: GetRecentSearchesUseCase,
     private val getRecommendedTagsUseCase: GetRecommendedTagsUseCase,
+    private val getPostDetailUseCase: GetPostDetailUseCase,
     private val postRepository: PostRepository
 ) : ViewModel() {
     private val _recentSearches = MutableStateFlow<List<RecentSearch>>(emptyList())
@@ -34,6 +36,9 @@ class SearchViewModel @Inject constructor(
     val searchResults: StateFlow<List<Post>> = _searchResults.asStateFlow()
 
     private val _allTags = MutableStateFlow<List<Tag>>(emptyList())
+
+    private val _selectedPostDetail = MutableStateFlow<Post?>(null)
+    val selectedPostDetail: StateFlow<Post?> = _selectedPostDetail.asStateFlow()
 
     init {
         Log.d("SearchViewModel", "SearchViewModel 초기화")
@@ -148,6 +153,19 @@ class SearchViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.e("SearchViewModel", "태그별 게시글 검색 실패: ${e.message}")
                 _searchResults.value = emptyList()
+            }
+        }
+    }
+
+    fun onPostItemClick(postId: Int) {
+        viewModelScope.launch {
+            try {
+                val postDetail = getPostDetailUseCase(postId)
+                _selectedPostDetail.value = postDetail
+                Log.d("SearchViewModel", "Post detail fetched: $postDetail")
+            } catch (e: Exception) {
+                Log.e("SearchViewModel", "Error fetching post detail: ${e.message}")
+                _selectedPostDetail.value = null
             }
         }
     }
