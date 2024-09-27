@@ -11,7 +11,9 @@ import com.cyber.restory.R
 import com.cyber.restory.data.model.Post
 import com.cyber.restory.databinding.ItemPostListBinding
 
-class SearchResultAdapter : ListAdapter<Post, SearchResultAdapter.ViewHolder>(PostDiffCallback()) {
+class SearchResultAdapter(
+    private val onItemClick: (Post) -> Unit
+) : ListAdapter<Post, SearchResultAdapter.ViewHolder>(PostDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemPostListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -28,10 +30,8 @@ class SearchResultAdapter : ListAdapter<Post, SearchResultAdapter.ViewHolder>(Po
                 tvPostTitle.text = post.title
                 tvAddress.text = post.address
                 tvType.text = post.type
-                // 거리 정보가 없으므로 임시로 숨김
                 tvDistance.visibility = View.GONE
 
-                // 이미지 로딩
                 if (post.postImages.isNotEmpty()) {
                     Glide.with(ivPostImage)
                         .load(post.postImages[0].imageUrl)
@@ -42,17 +42,19 @@ class SearchResultAdapter : ListAdapter<Post, SearchResultAdapter.ViewHolder>(Po
                     ivPostImage.setImageResource(R.drawable.home_article_image)
                 }
 
-                // 타입 아이콘 설정 (예시, 실제 로직에 맞게 수정 필요)
                 when (post.type) {
                     "식당" -> ivType.setImageResource(R.drawable.ic_mission)
-                    // 다른 타입에 대한 아이콘 설정
                     else -> ivType.setImageResource(R.drawable.ic_mission)
                 }
+
+                // Set click listener for the entire item
+                root.setOnClickListener { onItemClick(post) }
             }
         }
     }
 }
 
+// PostDiffCallback remains unchanged
 class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
     override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
         return oldItem.id == newItem.id
