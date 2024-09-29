@@ -125,7 +125,7 @@ class PlaceMapFragment : Fragment() {
         // 선택한 지역
         viewModel.selectedRegion.observe(viewLifecycleOwner) { region ->
             region?.let {
-                binding.areaFilterTextView.text = it.name
+                binding.areaFilterTextView.text = "${it.name} (${it.cnt})"
                 regionAdapter.setSelectedRegion(it)
             }
         }
@@ -158,6 +158,11 @@ class PlaceMapFragment : Fragment() {
                         viewModel.fetchPlaceData(viewModel.selectedRegion.value?.code, if (filterType == "ALL") "" else filterType)
                 })
                 viewModel.cityFilters.collect { regions ->
+                    regions.firstOrNull {
+                        it.code == "ALL"
+                    }.let {
+                        binding.areaFilterTextView.text = "${it?.name} (${it?.cnt})"
+                    }
                     regionAdapter.submitList(regions)
                 }
             }
@@ -237,7 +242,7 @@ class PlaceMapFragment : Fragment() {
         // TODO : 재생공간 타입별 마커 아이콘 분기 처리
         val styles = kakaoMap.labelManager?.addLabelStyles(
             LabelStyles.from(
-                LabelStyle.from(R.drawable.ic_marker)
+                LabelStyle.from(R.drawable.ic_place_marker)
                     .setIconTransition(LabelTransition.from(Transition.None, Transition.None))
             )
         )
