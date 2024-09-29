@@ -137,6 +137,11 @@ class PlaceListActivity: AppCompatActivity() {
                     }
                 }
                 viewModel.cityFilters.collect { regions ->
+                    regions.firstOrNull {
+                        it.code == "ALL"
+                    }.let {
+                        binding.areaFilterTextView.text = "${it?.name} (${it?.cnt})"
+                    }
                     regionAdapter.submitList(regions)
                 }
             }
@@ -151,7 +156,7 @@ class PlaceListActivity: AppCompatActivity() {
         // 선택한 지역
         viewModel.selectedRegion.observe(this@PlaceListActivity) { region ->
             region?.let {
-                binding.areaFilterTextView.text = it.name
+                binding.areaFilterTextView.text = "${it.name} (${it.cnt})"
                 binding.standardLocationTextView.text = "${MapUtils.getCityGovernmentBuilding(it.code)} 중심"
                 regionAdapter.setSelectedRegion(it)
             }
