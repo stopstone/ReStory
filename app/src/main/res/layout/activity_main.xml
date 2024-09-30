@@ -13,11 +13,28 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_home"
+        app:layout_constraintBottom_toTopOf="@id/tab_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/nav_graph" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_home"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tabBackground="@android:color/transparent"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/black"
+        app:tabIndicatorHeight="3dp"
+        app:tabIndicatorFullWidth="false"
+        app:tabMode="fixed"
+        app:tabPaddingStart="0dp"
+        app:tabPaddingEnd="0dp"
+        android:background="@android:color/transparent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_home"
@@ -25,9 +42,9 @@
         android:layout_height="wrap_content"
         app:backgroundTint="@color/white"
         app:itemActiveIndicatorStyle="@android:color/transparent"
+        app:itemBackground="@android:color/transparent"
         app:itemIconTint="@color/selector_bottom_navigation_color"
         app:itemRippleColor="@android:color/transparent"
-        app:itemBackground="@android:color/transparent"
         app:itemTextColor="@color/selector_bottom_navigation_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
