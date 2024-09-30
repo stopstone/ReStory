@@ -33,16 +33,24 @@ class EventBannerViewModel @Inject constructor(
     private val _tourItems = MutableStateFlow<List<TourItem>>(emptyList())
     val tourItems: StateFlow<List<TourItem>> = _tourItems.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     private var currentBannerPosition: Int = -1
 
     fun initializeWithSeoul(bannerPosition: Int) {
         Log.d("EventBannerViewModel", "서울로 초기화 시작: 배너 위치 = $bannerPosition")
         currentBannerPosition = bannerPosition
         viewModelScope.launch {
-            getCityFiltersWithCount()
-            val seoul = _cityFilters.value.find { it.code == "SEOUL" }
-            Log.d("EventBannerViewModel", "서울 지역 정보: ${seoul?.name}, 초기 cnt: ${seoul?.cnt}")
-            seoul?.let { setSelectedRegion(it) }
+            _isLoading.value = true
+            try {
+                getCityFiltersWithCount()
+                val seoul = _cityFilters.value.find { it.code == "SEOUL" }
+                Log.d("EventBannerViewModel", "서울 지역 정보: ${seoul?.name}, 초기 cnt: ${seoul?.cnt}")
+                seoul?.let { setSelectedRegion(it) }
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
@@ -103,10 +111,17 @@ class EventBannerViewModel @Inject constructor(
     fun setSelectedRegion(region: Region) {
         Log.d("EventBannerViewModel", "선택된 지역 설정: ${region.name}, 현재 cnt: ${region.cnt}")
         _selectedRegion.value = region
-        when (currentBannerPosition) {
-            0 -> getGreenTourInfo(region)
-            1 -> getLocationBasedTourInfo(region, "12")  // 관광지
-            2 -> getLocationBasedTourInfo(region, "15")  // 축제공연행사
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                when (currentBannerPosition) {
+                    0 -> getGreenTourInfo(region)
+                    1 -> getLocationBasedTourInfo(region, "12")  // 관광지
+                    2 -> getLocationBasedTourInfo(region, "15")  // 축제공연행사
+                }
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 

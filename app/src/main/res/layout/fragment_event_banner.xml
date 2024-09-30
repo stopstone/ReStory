@@ -55,6 +55,16 @@
         app:layout_constraintTop_toBottomOf="@id/tv_event_banner_title"
         tools:listitem="@layout/item_event_banner" />
 
+    <ProgressBar
+        android:id="@+id/loading_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_region_list"
         android:layout_width="0dp"
