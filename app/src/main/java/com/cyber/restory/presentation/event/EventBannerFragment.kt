@@ -72,6 +72,7 @@ class EventBannerFragment : Fragment() {
             btnRegionSelector.text = "지역 목록"
             btnRegionSelector.setOnClickListener { toggleRegionList() }
             rvRegionList.visibility = View.GONE
+            loadingView.visibility = View.GONE
         }
         Log.d("EventBannerFragment", "레이아웃 설정 완료")
     }
@@ -114,6 +115,13 @@ class EventBannerFragment : Fragment() {
         Log.d("EventBannerFragment", "ViewModel 관찰 시작")
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.isLoading.collect { isLoading ->
+                        binding.loadingView.visibility = if (isLoading) View.VISIBLE else View.GONE
+                        binding.rvEventBannerList.visibility = if (isLoading) View.GONE else View.VISIBLE
+                    }
+                }
+
                 launch {
                     viewModel.cityFilters.collect { regions ->
                         Log.d("EventBannerFragment", "새로운 지역 목록 수신: ${regions.size}개의 지역")
