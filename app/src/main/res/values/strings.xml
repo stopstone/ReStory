@@ -13,4 +13,5 @@
     <string name="description_notification_image">미션 알림</string>
     <string name="article_content_text_first">현대의 도시들은 빠르게 발전하면서 교통 혼잡, 주택 부족, 환경 오염, 사회적 불평등과 같은 문제를 겪고 있어요.\n이러한 문제들은 시민들의 삶의 질을 저하시킬 뿐만 아니라, 장기적으로 도시의 지속 가능성을 위협해요.\n 이 문제들을 해결하고 지속 가능한 성장을 위해 등장한 개념이 바로 ‘재생공간’이에요.\n 재생공간은 노후화된 지역이나 방치된 공간을 새롭게 변모시켜, 도시의 다양한 문제를 해결하고 더 나은 미래를 위한 기반을 마련하는 것을 의미해요.</string>
     <string name="article_content_text_second">재생공간은 낡고 방치된 공간을 현대적이고 기능적으로 탈바꿈시키는 것을 목표로 해요. 이렇게 하면 공공의 이익을 증대시키고, 지역 사회의 삶의 질을 높이며, 환경적으로 지속 가능한 발전을 도모할 수 있어요.</string>
+    <string name="label_home_title">공간의 재발견,\n구석구석 재생 공간 탐험하기</string>
 </resources>
