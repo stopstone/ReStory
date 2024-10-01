@@ -80,6 +80,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun updateUI(post: Post) {
         with(binding) {
+            toolbar.title = post.title
             tvArticleDetailCategory.text = post.typeDesc
             articleDetailTitle.text = post.title
             tvArticleDetailDescription.text = post.summary
