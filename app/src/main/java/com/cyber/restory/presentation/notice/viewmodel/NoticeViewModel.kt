@@ -1,5 +1,6 @@
 package com.cyber.restory.presentation.notice.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cyber.restory.data.model.Notice
@@ -28,13 +29,15 @@ class NoticeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val result = getNoticesUseCase()
+                Log.d("Notice", result.toString())
                 _notices.value = result
                 _error.value = null
             } catch (e: Exception) {
-                _error.value = e.message
+                _error.value = e.message ?: "알 수 없는 오류가 발생했습니다."
             }
         }
     }
+
 
     fun toggleNoticeExpansion(position: Int) {
         val currentList = _notices.value.toMutableList()

@@ -58,8 +58,8 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideNoticeRepository(): NoticeRepository {
-        return NoticeRepositoryImpl()
+    fun provideNoticeRepository(api: ApiClient): NoticeRepository {
+        return NoticeRepositoryImpl(api)
     }
 
     @Provides
