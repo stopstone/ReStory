@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cyber.restory.data.model.Post
 import com.cyber.restory.data.model.postType.FilterType
 import com.cyber.restory.domain.usecase.GetCityFiltersUseCase
 import com.cyber.restory.domain.usecase.GetFilterTypesUseCase
@@ -44,7 +43,7 @@ class PlaceListViewModel @Inject constructor(
         get() = _filterCategoryChangeEvent
 
     private var currentPage = 1
-    private val pageSize = 10
+    private val pageSize = 100
     private var _selectedType = MutableLiveData<FilterType>()
 
     private val _selectedRegion = MutableLiveData<Region?>(null)
@@ -94,10 +93,12 @@ class PlaceListViewModel @Inject constructor(
                     id = post.id,
                     title = post.title,
                     type = post.type,
+                    typeDesc = post.typeDesc,
                     summary = post.summary,
                     content = post.content,
                     subContent = post.subContent,
                     city = post.city,
+                    cityDesc = post.cityDesc,
                     address = post.address,
                     latitude = post.latitude,
                     longitude = post.longitude,

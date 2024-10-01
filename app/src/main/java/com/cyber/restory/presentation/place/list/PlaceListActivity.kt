@@ -14,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.cyber.restory.R
 import com.cyber.restory.adapter.place.PlaceFilterAdapter
 import com.cyber.restory.databinding.ActivityPlaceListBinding
 import com.cyber.restory.presentation.custom.Region
@@ -168,10 +169,12 @@ class PlaceListActivity: AppCompatActivity() {
     }
 
     private fun toggleRegionList() {
-        binding.regionlist.visibility = if (binding.regionlist.visibility == View.VISIBLE) {
-            View.GONE
+        if (binding.regionlist.visibility == View.VISIBLE) {
+            binding.areaToggleImageView.setImageResource(R.drawable.ic_below_arrow)
+            binding.regionlist.visibility = View.GONE
         } else {
-            View.VISIBLE
+            binding.areaToggleImageView.setImageResource(R.drawable.ic_up_arrow)
+            binding.regionlist.visibility = View.VISIBLE
         }
     }
     private fun onRegionSelected(region: Region) {

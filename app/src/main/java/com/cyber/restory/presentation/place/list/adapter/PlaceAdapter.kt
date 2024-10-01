@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.cyber.restory.R
 import com.cyber.restory.databinding.ItemPostListBinding
 import com.cyber.restory.presentation.place.list.PostItem
 
@@ -28,20 +29,18 @@ class PlaceAdapter() : RecyclerView.Adapter<PlaceAdapter.FilterItemViewHolder>()
             } else {
                 String.format("%.1fkm", data.distance / 1000)
             }
+            tvType.text = data.typeDesc
 
-            /*tvDistance.text = MapUtils.getDistance(
-                data.latitude,
-                data.longitude,
-                data.selectedLatitude,
-                data.selectedLongitude
-            )*/
-            tvType.text = data.type
+            val typeImageMap = mapOf(
+                "CAFE" to R.drawable.ic_tag_coffee,
+                "EXPERIENCE" to R.drawable.ic_tag_experience,
+                "CULTURE" to R.drawable.ic_tag_culture,
+                "STAY" to R.drawable.ic_tag_stay
+            )
 
-
-            /**
-            TODO : 재생공간 Type 별로 아이콘 분기 처리
-             * ivType.
-             * */
+            typeImageMap[data.type]?.let {
+                ivType.setImageResource(it)
+            }
         }
 
         fun bindViews(data: PostItem) = with(binding) {
