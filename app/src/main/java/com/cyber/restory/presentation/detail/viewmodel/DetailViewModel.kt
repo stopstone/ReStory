@@ -62,6 +62,7 @@ class DetailViewModel @Inject constructor(
 
                 for (contentTypeId in contentTypeIds) {
                     val places = getNearbyPlacesUseCase(post.latitude, post.longitude, contentTypeId)
+                        .sortedBy { it.dist?.toDoubleOrNull() ?: Double.MAX_VALUE }  // 거리순 정렬
                     Log.d("DetailViewModel", "contentTypeId: $contentTypeId, 받은 장소 수: ${places.size}")
 
                     if (places.isNotEmpty()) {
@@ -80,13 +81,6 @@ class DetailViewModel @Inject constructor(
                 _nearbyPlaces.value = nearbyPlaceItems
                 Log.d("DetailViewModel", "주변 장소 정보 요청 성공: ${nearbyPlaceItems.size}개 아이템")
 
-                // 디버깅을 위한 로그 추가
-                nearbyPlaceItems.forEachIndexed { index, item ->
-                    when (item) {
-                        is NearbyPlaceItem.Title -> Log.d("DetailViewModel", "Item $index: Title - ${item.title}")
-                        is NearbyPlaceItem.PlaceList -> Log.d("DetailViewModel", "Item $index: PlaceList - ${item.places.size} places")
-                    }
-                }
             } catch (e: Exception) {
                 Log.e("DetailViewModel", "주변 장소 정보 요청 실패: ${e.message}", e)
             }

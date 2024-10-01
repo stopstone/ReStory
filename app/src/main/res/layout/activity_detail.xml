@@ -17,6 +17,7 @@
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:fitsSystemWindows="true"
             app:collapsedTitleTextAppearance="@style/CollapsedTitleText"
             app:contentScrim="@color/white"
@@ -77,12 +78,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/background_button_stroke"
-                android:drawablePadding="3dp"
+                android:drawablePadding="10dp"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="4dp"
                 android:text="공유"
                 android:textSize="12sp"
-                app:drawableEndCompat="@drawable/ic_share"
+                android:textStyle="bold"
+                app:drawableEndCompat="@drawable/ic_share_detail"
                 app:layout_constraintBottom_toBottomOf="@id/tv_article_detail_category"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_article_detail_category" />
@@ -116,6 +118,7 @@
                 android:layout_marginTop="32dp"
                 android:drawablePadding="3dp"
                 android:text="운영시간"
+                android:textColor="#171719"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_clock"
@@ -143,9 +146,9 @@
                 android:layout_marginEnd="20dp"
                 android:padding="4dp"
                 android:src="@drawable/selector_arrow_toggle"
+                android:textColor="#171719"
                 app:layout_constraintBottom_toBottomOf="@id/tv_article_detail_time"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_article_detail_time"
                 app:layout_constraintTop_toTopOf="@id/tv_article_detail_time" />
 
             <TextView
@@ -166,6 +169,7 @@
                 android:layout_marginTop="16dp"
                 android:drawablePadding="3dp"
                 android:text="전화번호"
+                android:textColor="#171719"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_telephone"
@@ -191,6 +195,7 @@
                 android:layout_marginTop="16dp"
                 android:drawablePadding="3dp"
                 android:text="홈페이지"
+                android:textColor="#171719"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_homepage"
@@ -219,6 +224,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="32dp"
                 android:text="비하인드 스토리"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -253,6 +259,7 @@
                 android:layout_marginTop="32dp"
                 android:drawablePadding="3dp"
                 android:text="지도"
+                android:textColor="#171719"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_map"
@@ -264,20 +271,22 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                app:layout_constraintBottom_toBottomOf="@id/tv_article_detail_map_label"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                app:layout_constraintEnd_toStartOf="@id/btn_article_detail_map_copy"
                 app:layout_constraintStart_toEndOf="@id/tv_article_detail_map_label"
                 app:layout_constraintTop_toTopOf="@id/tv_article_detail_map_label"
-                tools:text="00시 00구 00로 123번길 00, 12345" />
+                tools:text="00시 00구 00로 123번길 00, 1234500시 00구 00로 123번길 00, 12345" />
 
             <ImageButton
                 android:id="@+id/btn_article_detail_map_copy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_copy"
-                app:layout_constraintBottom_toBottomOf="@id/tv_article_detail_map_text"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_article_detail_map_text"
                 app:layout_constraintTop_toTopOf="@id/tv_article_detail_map_text" />
 
             <com.kakao.vectormap.MapView
@@ -289,7 +298,8 @@
                 android:background="@color/gray_300"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tv_article_detail_map_label"
-                app:layout_constraintTop_toBottomOf="@id/tv_article_detail_map_label" />
+                app:layout_constraintTop_toBottomOf="@id/tv_article_detail_map_text"
+                app:layout_goneMarginTop="16dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_nearby_places"

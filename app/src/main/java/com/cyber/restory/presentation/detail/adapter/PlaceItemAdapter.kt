@@ -23,7 +23,7 @@ class PlaceItemAdapter : ListAdapter<LocationBasedTourItem, PlaceItemAdapter.Vie
         fun bind(item: LocationBasedTourItem) {
             binding.tvTitle.text = item.title
             binding.tvDistance.text = formatDistance(item.dist.toDoubleOrNull() ?: 0.0)
-
+            binding.tvAddress.text = item.addr1
             Glide.with(binding.root.context)
                 .load(item.firstimage)
                 .into(binding.ivPlace)
