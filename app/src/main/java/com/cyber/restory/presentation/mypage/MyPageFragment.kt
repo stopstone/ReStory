@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.cyber.restory.BuildConfig
 import com.cyber.restory.databinding.FragmentMypageBinding
 
 class MyPageFragment : Fragment() {
@@ -27,6 +28,7 @@ class MyPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupClickListeners()
+        setVersionInfo()
     }
 
     private fun setupClickListeners() {
@@ -47,6 +49,11 @@ class MyPageFragment : Fragment() {
             val action = MyPageFragmentDirections.actionMypageToNotice()
             findNavController().navigate(action)
         }
+    }
+
+    private fun setVersionInfo() {
+        val versionName = BuildConfig.VERSION_NAME
+        binding.tvVersionInfo.text = "현재 버전 v $versionName"
     }
 
     private fun sendServiceInquiryEmail() {
