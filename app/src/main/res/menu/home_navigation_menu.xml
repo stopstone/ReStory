@@ -6,7 +6,7 @@
         android:title="@string/label_home" />
     <item
         android:id="@+id/navigation_place_map"
-        android:icon="@drawable/ic_mission"
+        android:icon="@drawable/ic_map_2"
         android:title="@string/label_place_map" />
     <item
         android:id="@+id/navigation_mypage"
