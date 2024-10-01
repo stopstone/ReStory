@@ -80,7 +80,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun updateUI(post: Post) {
         with(binding) {
-            tvArticleDetailCategory.text = post.type
+            tvArticleDetailCategory.text = post.typeDesc
             articleDetailTitle.text = post.title
             tvArticleDetailDescription.text = post.summary
             tvArticleDetailTime.text = post.duration
@@ -96,7 +96,8 @@ class DetailActivity : AppCompatActivity() {
                     .into(ivArticleDetailImage)
 
                 Glide.with(this@DetailActivity)
-                    .load(post.postImages[1].imageUrl)
+                    .load(post?.postImages?.get(0)?.imageUrl)
+                    .error(R.drawable.ic_empty)
                     .centerCrop()
                     .into(ivArticleDetailBehindImage)
             }
