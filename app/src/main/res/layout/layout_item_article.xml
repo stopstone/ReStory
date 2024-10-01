@@ -10,14 +10,13 @@
     android:focusable="true">
 
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_home_news_image"
         android:layout_width="92dp"
         android:layout_height="92dp"
-        android:background="@drawable/background_border_square"
         android:scaleType="centerCrop"
         android:src="@drawable/home_article_image"
-        android:padding="1dp"
+        app:shapeAppearanceOverlay="@style/AppRoundedImage.Small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
