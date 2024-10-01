@@ -229,7 +229,7 @@ class HomeFragment : Fragment() {
             .into(binding.ivHomeArticleThumbnail)
 
         binding.tvHomeThumbnailTitle.text = post.title
-        binding.tvHomeThumbnailSubtitle.text = post.subContent
+        binding.tvHomeThumbnailSubtitle.text = post.summary
 
         binding.ivHomeArticleThumbnail.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeToDetail(post.id)
