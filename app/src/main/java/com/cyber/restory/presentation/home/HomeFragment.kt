@@ -1,5 +1,6 @@
 package com.cyber.restory.presentation.home
 
+import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
@@ -161,14 +162,40 @@ class HomeFragment : Fragment() {
                 isCheckable = true
                 isCheckedIconVisible = false
 
-                chipIcon = null
-                iconEndPadding = 0f
-                iconStartPadding = 0f
+                // 필터 타입에 따라 아이콘 설정
+                val iconResId = when (filterType.description) {
+                    "카페&음식점" -> R.drawable.ic_filter_coffee
+                    "체험" -> R.drawable.ic_filter_experience
+                    "숙박" -> R.drawable.ic_filter_stay
+                    "문화공간" -> R.drawable.ic_filter_culture
+                    else -> null
+                }
 
-                // 텍스트 스타일 적용
+                if (iconResId != null) {
+                    val iconTint = ColorStateList(
+                        arrayOf(
+                            intArrayOf(android.R.attr.state_checked),
+                            intArrayOf(-android.R.attr.state_checked)
+                        ),
+                        intArrayOf(
+                            ContextCompat.getColor(context, R.color.white),
+                            ContextCompat.getColor(context, R.color.black)
+                        )
+                    )
+
+                    chipIcon = ContextCompat.getDrawable(context, iconResId)
+                    chipIconTint = iconTint
+                    iconEndPadding = resources.getDimension(R.dimen.chip_icon_padding)
+                    iconStartPadding = resources.getDimension(R.dimen.chip_icon_padding)
+                } else {
+                    chipIcon = null
+                    iconEndPadding = 0f
+                    iconStartPadding = 0f
+                }
+
+                // 기존 코드 유지
                 setTextAppearanceResource(R.style.CustomChipStyle)
 
-                // 배경색과 테두리 설정
                 chipBackgroundColor = ContextCompat.getColorStateList(
                     context,
                     R.color.color_choice_chip_background_color
@@ -179,12 +206,10 @@ class HomeFragment : Fragment() {
                 )
                 chipStrokeWidth = resources.getDimension(R.dimen.chip_stroke_width)
 
-                // 칩의 모서리 반경 설정
                 shapeAppearanceModel = shapeAppearanceModel.toBuilder()
-                    .setAllCorners(CornerFamily.ROUNDED, 100f) // 원하는 반경 값 설정
+                    .setAllCorners(CornerFamily.ROUNDED, 100f)
                     .build()
 
-                // 마진 설정
                 layoutParams = ViewGroup.MarginLayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
@@ -192,14 +217,13 @@ class HomeFragment : Fragment() {
                     marginEnd = resources.getDimensionPixelSize(R.dimen.chip_margin_end)
                 }
 
-                // 체크 상태에 따라 데이터 요청
                 setOnCheckedChangeListener { _, isChecked ->
                     if (isChecked) {
                         Log.d("HomeFragment", "${filterType.description} 칩 선택됨")
-                        viewModel.selectFilterType(filterType) // 데이터 요청 로직 유지
-                        setTypeface(null, Typeface.BOLD) // 선택된 경우 볼드체로 변경
+                        viewModel.selectFilterType(filterType)
+                        setTypeface(null, Typeface.BOLD)
                     } else {
-                        setTypeface(null, Typeface.NORMAL) // 기본은 일반체
+                        setTypeface(null, Typeface.NORMAL)
                     }
                 }
             }

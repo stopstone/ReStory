@@ -24,29 +24,38 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/cg_home_category"
+        <HorizontalScrollView
+            android:id="@+id/hsv_home_category"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
             android:layout_marginTop="14dp"
+            android:scrollbars="none"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_home_title_first"
-            app:selectionRequired="true"
-            app:singleSelection="true" />
+            app:layout_constraintTop_toBottomOf="@id/tv_home_title_first">
 
-        <!-- ImageView for article thumbnail -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cg_home_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="20dp"
+                app:chipSpacingHorizontal="8dp"
+                app:selectionRequired="true"
+                app:singleSelection="true" />
+
+        </HorizontalScrollView>
+
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_home_article_thumbnail"
             android:layout_width="0dp"
             android:layout_height="290dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="14dp"
             android:background="@color/gray_300"
             app:layout_constraintEnd_toStartOf="@id/rv_home_article_thumbnail_list"
             app:layout_constraintHorizontal_weight="2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cg_home_category"
+            app:layout_constraintTop_toBottomOf="@id/hsv_home_category"
             app:shapeAppearanceOverlay="@style/AppRoundedImage.Small" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -117,7 +126,7 @@
             android:layout_marginEnd="20dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="재생공간 소식을 공유해요."
+            android:text="재생공간 소식을 공유해요"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

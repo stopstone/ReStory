@@ -10,4 +10,5 @@
     <dimen name="chip_icon_size">24dp</dimen>
     <dimen name="chip_margin_end">6dp</dimen>
     <dimen name="chip_stroke_width">1dp</dimen>
+    <dimen name="chip_icon_padding">4dp</dimen>
 </resources>
