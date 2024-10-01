@@ -29,7 +29,7 @@ class SearchResultAdapter(
             binding.apply {
                 tvPostTitle.text = post.title
                 tvAddress.text = post.address
-                tvType.text = post.type
+                tvType.text = post.typeDesc
                 tvDistance.visibility = View.GONE
 
                 if (post.postImages.isNotEmpty()) {
@@ -42,11 +42,16 @@ class SearchResultAdapter(
                     ivPostImage.setImageResource(R.drawable.home_article_image)
                 }
 
-                when (post.type) {
-                    "식당" -> ivType.setImageResource(R.drawable.ic_mission)
-                    else -> ivType.setImageResource(R.drawable.ic_mission)
-                }
+                val typeImageMap = mapOf(
+                    "CAFE" to R.drawable.ic_tag_coffee,
+                    "EXPERIENCE" to R.drawable.ic_tag_experience,
+                    "CULTURE" to R.drawable.ic_tag_culture,
+                    "STAY" to R.drawable.ic_tag_stay
+                )
 
+                typeImageMap[post.type]?.let {
+                    ivType.setImageResource(it)
+                }
                 // Set click listener for the entire item
                 root.setOnClickListener { onItemClick(post) }
             }

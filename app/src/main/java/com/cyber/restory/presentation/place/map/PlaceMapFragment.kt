@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.cyber.restory.App
 import com.cyber.restory.R
 import com.cyber.restory.adapter.place.PlaceFilterAdapter
@@ -37,6 +38,7 @@ import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
@@ -116,7 +118,7 @@ class PlaceMapFragment : Fragment() {
                 labelLayer?.removeAll()
                 list.forEachIndexed { index, post ->
                     // 마커 생성
-                    showIconLabel(index, post.latitude, post.longitude)
+                    showIconLabel(index, post.latitude, post.longitude, post.type)
                 }
             } else {
                 return@observe
@@ -144,7 +146,25 @@ class PlaceMapFragment : Fragment() {
                         if (data.isNotEmpty()) {
                             binding.placeNameTextView.text = data[0].title
                             binding.addressTextView.text = data[0].address
-                            binding.typeTextView.text = data[0].type
+                            binding.typeTextView.text = data[0].typeDesc
+
+                            val typeIconResId = when(data[0].type) {
+                                "CAFE" -> R.drawable.ic_tag_coffee
+                                "EXPERIENCE" -> R.drawable.ic_tag_experience
+                                "CULTURE" -> R.drawable.ic_tag_culture
+                                "STAY" -> R.drawable.ic_tag_stay
+                                else -> R.drawable.ic_tag_coffee
+                            }
+
+                            Glide.with(binding.root.context)
+                                .load(typeIconResId)
+                                .into(binding.typeImageView)
+
+                            Glide.with(binding.root.context)
+                                .load(data.firstOrNull()?.postImages?.firstOrNull()?.imageUrl ?: R.drawable.ic_empty)
+                                .placeholder(R.color.gray_300)
+                                .error(R.color.gray_300)
+                                .into(binding.placeImageView)
                             binding.persistentBottomSheet.setOnClickListener {
                                 val action = PlaceMapFragmentDirections.actionMapToDetail(data[0].id)
                                 findNavController().navigate(action)
@@ -218,7 +238,7 @@ class PlaceMapFragment : Fragment() {
             override fun onMapReady(map: KakaoMap) {
                 // 인증 후 API 가 정상적으로 실행될 때 호출됨
                 kakaoMap = map
-                kakaoMap.cameraMinLevel = 9
+                kakaoMap.cameraMinLevel = 7
                 kakaoMap.cameraMaxLevel = 17
                 labelLayer = kakaoMap.labelManager?.layer
                 labelClickEvent()
@@ -237,17 +257,23 @@ class PlaceMapFragment : Fragment() {
     /*
     * KakaoMap에 재생공간 Marker 생성
     * */
-    private fun showIconLabel(index: Int, lat: Double, lon: Double) {
+    private fun showIconLabel(index: Int, lat: Double, lon: Double, type: String) {
         val pos = LatLng.from(lat, lon)
-        // TODO : 재생공간 타입별 마커 아이콘 분기 처리
+        val typeIconResId = when(type) {
+            "CAFE" -> R.drawable.ic_marker_coffee
+            "EXPERIENCE" -> R.drawable.ic_marker_experience
+            "CULTURE" -> R.drawable.ic_marker_culture
+            "STAY" -> R.drawable.ic_marker_stay
+            else -> R.drawable.ic_marker_coffee
+        }
         val styles = kakaoMap.labelManager?.addLabelStyles(
             LabelStyles.from(
-                LabelStyle.from(R.drawable.ic_place_marker)
+                LabelStyle.from(typeIconResId)
                     .setIconTransition(LabelTransition.from(Transition.None, Transition.None))
             )
         )
         // 라벨 생성
-        labelLayer?.addLabel(LabelOptions.from("iconLabel_$index", pos).setStyles(styles))
+        labelLayer?.addLabel(LabelOptions.from("iconLabel_${index}_$type", pos).setStyles(styles))
     }
 
     /*
@@ -256,6 +282,23 @@ class PlaceMapFragment : Fragment() {
     fun labelClickEvent() {
         kakaoMap.isPoiClickable = true
         kakaoMap.setOnLabelClickListener { map, layer, label ->
+            map.labelManager?.layer?.allLabels?.forEach{ innerLabel: Label ->
+                val typeIconResId = when {
+                    innerLabel.labelId.contains("CAFE") -> R.drawable.ic_marker_coffee
+                    innerLabel.labelId.contains("EXPERIENCE") -> R.drawable.ic_marker_experience
+                    innerLabel.labelId.contains("CULTURE") -> R.drawable.ic_marker_culture
+                    innerLabel.labelId.contains("STAY") -> R.drawable.ic_marker_stay
+                    else -> R.drawable.ic_marker_coffee
+                }
+                innerLabel.changeStyles(LabelStyles.from(LabelStyle.from(typeIconResId)))
+            }.run {
+                if(label.styles.styleId == "markerSelected_${label.labelId}") {
+                    label?.changeStyles(LabelStyles.from("markerUnSelected_${label.labelId}",LabelStyle.from(R.drawable.ic_marker_coffee)))
+                } else {
+                    label?.changeStyles(LabelStyles.from("markerSelected_${label.labelId}", LabelStyle.from(R.drawable.ic_marker_select)))
+                }
+            }
+
             viewModel.getSelectPlaceData(label.position.latitude, label.position.longitude)
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
             true
@@ -343,10 +386,12 @@ class PlaceMapFragment : Fragment() {
     }
 
     private fun toggleRegionList() {
-        binding.rvRegionList.visibility = if (binding.rvRegionList.visibility == View.VISIBLE) {
-            View.GONE
+        if (binding.rvRegionList.visibility == View.VISIBLE) {
+            binding.areaToggleImageView.setImageResource(R.drawable.ic_below_arrow)
+            binding.rvRegionList.visibility = View.GONE
         } else {
-            View.VISIBLE
+            binding.areaToggleImageView.setImageResource(R.drawable.ic_up_arrow)
+            binding.rvRegionList.visibility = View.VISIBLE
         }
     }
 

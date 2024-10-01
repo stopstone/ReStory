@@ -20,21 +20,29 @@ class PlaceFilterAdapter() : RecyclerView.Adapter<PlaceFilterAdapter.FilterItemV
     ): RecyclerView.ViewHolder(binding.root) {
         fun bindData(data: FilterType) = with(binding) {
 
-            val (bgResId, textColorResId) = if (data.isSelected) {
-                R.drawable.bg_0066ff_round30 to R.color.color_0066ff
+            val (bgResId, textColorResId, selectIconResId) = if (data.isSelected) {
+                Triple(R.drawable.bg_17191c_round30, R.color.white, R.drawable.ic_filter_coffee_select)
             } else {
-                R.drawable.bg_d9d9d9_white_round30 to R.color.color_b1b1b1
+                val selectIcon = when(data.code) {
+                    "CAFE" -> R.drawable.ic_filter_coffee
+                    "EXPERIENCE" -> R.drawable.ic_filter_experience
+                    "CULTURE" -> R.drawable.ic_filter_culture
+                    "STAY" -> R.drawable.ic_filter_stay
+                    else -> R.drawable.ic_filter_coffee
+                }
+                Triple(R.drawable.bg_d9d9d9_white_round30, R.color.color_17191C, selectIcon)
             }
-
             filterNameTextView.apply {
                 text = data.description
-                background = ResourcesCompat.getDrawable(App.instance.resources, bgResId, null)
                 setTextColor(ContextCompat.getColor(App.instance, textColorResId))
             }
+            filterIconImageView.setImageResource(selectIconResId)
+
+            rootLinearLayout.background = ResourcesCompat.getDrawable(App.instance.resources, bgResId, null)
         }
 
         fun bindViews(data: FilterType) = with(binding){
-            filterNameTextView.setOnClickListener {
+            rootLinearLayout.setOnClickListener {
                 filterClickListener(data)
             }
         }

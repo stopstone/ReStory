@@ -20,15 +20,24 @@
             android:id="@+id/areaFilterTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_below_arrow"
-            android:drawablePadding="6dp"
             android:text="전국"
-            android:textColor="#0066ff"
+            android:textColor="@color/color_17191C"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="전국" />
+
+        <ImageView
+            android:id="@+id/areaToggleImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_below_arrow"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="3dp"
+            app:layout_constraintStart_toEndOf="@id/areaFilterTextView"
+            app:layout_constraintTop_toTopOf="@id/areaFilterTextView"
+            app:layout_constraintBottom_toBottomOf="@id/areaFilterTextView"/>
 
         <ImageView
             android:id="@+id/mapImageView"

@@ -21,15 +21,24 @@
             android:id="@+id/areaFilterTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="6dp"
             android:text="전국"
-            android:textColor="#0066ff"
+            android:textColor="@color/color_17191C"
             android:textSize="14sp"
-            android:drawableEnd="@drawable/ic_below_arrow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="전국" />
+
+        <ImageView
+            android:id="@+id/areaToggleImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_below_arrow"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="3dp"
+            app:layout_constraintStart_toEndOf="@id/areaFilterTextView"
+            app:layout_constraintTop_toTopOf="@id/areaFilterTextView"
+            app:layout_constraintBottom_toBottomOf="@id/areaFilterTextView"/>
 
 
         <ImageView
@@ -154,7 +163,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:gravity="center"
                 android:text="새들어린이공원"
                 android:textColor="@color/black"
@@ -163,36 +172,27 @@
                 app:layout_constraintStart_toEndOf="@id/placeImageView"
                 app:layout_constraintTop_toBottomOf="@+id/view2" />
 
-            <TextView
-                android:id="@+id/distanceTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="200m"
-                android:textColor="#434343"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/placeNameTextView"
-                app:layout_constraintTop_toBottomOf="@+id/placeNameTextView" />
 
             <TextView
                 android:id="@+id/addressTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
                 android:text="서울 서대문구 북아현로 34(북아현동)"
+                android:layout_marginTop="4dp"
                 android:textColor="#727272"
                 android:textSize="13sp"
-                app:layout_constraintBottom_toBottomOf="@id/distanceTextView"
-                app:layout_constraintStart_toEndOf="@+id/distanceTextView"
-                app:layout_constraintTop_toTopOf="@id/distanceTextView" />
+                app:layout_constraintStart_toStartOf="@id/placeNameTextView"
+                app:layout_constraintTop_toBottomOf="@id/placeNameTextView"
+                app:layout_constraintBottom_toTopOf="@id/typeLinearLayout"
+                app:layout_constraintStart_toEndOf="@+id/placeNameTextView"/>
 
             <ImageView
                 android:id="@+id/placeImageView"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_mission"
+                android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/placeNameTextView" />
 
@@ -204,22 +204,51 @@
                 android:background="#d3d3d3"
                 app:layout_constraintTop_toBottomOf="@+id/placeImageView" />
 
-            <TextView
-                android:id="@+id/typeTextView"
+
+            <LinearLayout
+                android:id="@+id/typeLinearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_0066ff_round30"
-                android:drawableStart="@drawable/ic_list_12"
-                android:drawablePadding="6dp"
-                android:drawableTint="@color/color_0066ff"
+                android:orientation="horizontal"
+                android:background="@drawable/bg_d9d9d9_round30"
+                android:layout_marginTop="4dp"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="5dp"
-                android:text="카페"
-                android:textColor="@color/color_0066ff"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="@id/distanceTextView"
-                app:layout_constraintTop_toBottomOf="@id/distanceTextView" />
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="@id/placeNameTextView"
+                app:layout_constraintTop_toBottomOf="@id/addressTextView">
+
+                <ImageView
+                    android:id="@+id/typeImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_list_12"
+                    android:layout_marginTop="1.5dp"
+                    app:layout_constraintEnd_toStartOf="@id/typeTextView"/>
+
+                <TextView
+                    android:id="@+id/typeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="카페"
+                    android:layout_marginStart="6dp"
+                    android:textColor="@color/color_17191C"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/distanceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="200m"
+                android:textColor="#434343"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginStart="6dp"
+                app:layout_constraintStart_toEndOf="@id/typeLinearLayout"
+                app:layout_constraintTop_toTopOf="@+id/typeLinearLayout"
+                app:layout_constraintBottom_toBottomOf="@id/typeLinearLayout"/>
+
             <!-- <ImageView
                  android:id="@+id/imageView3"
                  android:layout_width="wrap_content"
