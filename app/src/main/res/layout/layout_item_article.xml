@@ -10,13 +10,12 @@
     android:focusable="true">
 
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <ImageView
         android:id="@+id/iv_home_news_image"
         android:layout_width="92dp"
         android:layout_height="92dp"
         android:scaleType="centerCrop"
         android:src="@drawable/home_article_image"
-        app:shapeAppearanceOverlay="@style/AppRoundedImage.Small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,7 +27,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="26dp"
         android:background="@android:color/transparent"
-        android:text="재생공간, 왜 필요할까요?"
+        android:text="발전소에서 미술관으로 : 공간의 변신"
         android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="bold"
@@ -41,8 +40,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:background="@android:color/transparent"
-        android:text="2024.07.20"
-        android:textColor="@color/gray_400"
+        android:text="2024.09.04"
+        android:textColor="#989BA2"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@id/tv_home_news_title"
         app:layout_constraintTop_toBottomOf="@id/tv_home_news_title" />
