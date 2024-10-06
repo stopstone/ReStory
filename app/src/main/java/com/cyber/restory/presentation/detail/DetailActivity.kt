@@ -83,13 +83,13 @@ class DetailActivity : AppCompatActivity() {
             toolbar.title = post.title
             tvArticleDetailCategory.text = post.typeDesc
             articleDetailTitle.text = post.title
-            tvArticleDetailDescription.text = post.summary
+            tvArticleDetailDescription.text = post.content
             tvArticleDetailTime.text = post.duration
             tvArticleDetailTimeHoliday.text = "${post.holiday} 휴무"
             tvArticleDetailTelephone.text = post.telephone
             tvArticleDetailHomepage.text = post.url
             tvArticleDetailMapText.text = post.address
-            tvArticleDetailBehindText.text = post.content
+            tvArticleDetailBehindText.text = post.subContent
 
             if (post.postImages.isNotEmpty()) {
                 Glide.with(this@DetailActivity)
