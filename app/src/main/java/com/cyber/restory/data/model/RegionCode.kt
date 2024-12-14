@@ -25,8 +25,6 @@ enum class RegionCode(
     JEJU("JEJU", "39", "제주", 33.4996213, 126.5311884);
 
     companion object {
-        fun fromTeamCode(code: String): RegionCode? = entries.find { it.teamCode == code }
-        fun fromPublicApiCode(code: String): RegionCode? = entries.find { it.publicApiCode == code }
         fun fromDescription(desc: String): RegionCode? = entries.find { it.description == desc }
     }
 }

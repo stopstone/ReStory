@@ -28,14 +28,10 @@ class DetailViewModel @Inject constructor(
 
     fun initializeWithPostId(id: Int) {
         viewModelScope.launch {
-            try {
-                Log.d("DetailViewModel", "게시글 상세 정보 요청 시작: id=$id")
+            runCatching {
                 val post = getPostDetailUseCase(id)
                 _postDetail.value = post
-                Log.d("DetailViewModel", "게시글 상세 정보 요청 성공: ${post.title}")
                 getNearbyPlaces(post)
-            } catch (e: Exception) {
-                Log.e("DetailViewModel", "게시글 상세 정보 요청 실패: ${e.message}", e)
             }
         }
     }
@@ -43,10 +39,8 @@ class DetailViewModel @Inject constructor(
     private fun getNearbyPlaces(post: Post) {
         viewModelScope.launch {
             try {
-                Log.d("DetailViewModel", "주변 장소 정보 요청 시작: 위도=${post.latitude}, 경도=${post.longitude}, 타입=${post.type}")
                 val nearbyPlaceItems = mutableListOf<NearbyPlaceItem>()
-
-                val contentTypeIds = when (post.type) {
+                val contentTypeIds = when (post.typeDesc) {
                     "카페" -> listOf("12")  // 관광지
                     "숙박" -> listOf("39", "12")  // 맛집, 관광지
                     "문화공간" -> listOf("39")  // 맛집
@@ -62,25 +56,20 @@ class DetailViewModel @Inject constructor(
 
                 for (contentTypeId in contentTypeIds) {
                     val places = getNearbyPlacesUseCase(post.latitude, post.longitude, contentTypeId)
-                        .sortedBy { it.dist?.toDoubleOrNull() ?: Double.MAX_VALUE }  // 거리순 정렬
-                    Log.d("DetailViewModel", "contentTypeId: $contentTypeId, 받은 장소 수: ${places.size}")
+                        .sortedBy { it.dist.toDoubleOrNull() ?: Double.MAX_VALUE }  // 거리순 정렬
 
                     if (places.isNotEmpty()) {
                         nearbyPlaceItems.add(NearbyPlaceItem.Title(titleMap[contentTypeId] ?: "주변 추천 장소"))
                         nearbyPlaceItems.add(NearbyPlaceItem.PlaceList(places.take(5)))
-                        Log.d("DetailViewModel", "추가된 장소 타입: ${titleMap[contentTypeId]}, 개수: ${places.take(5).size}")
                     }
                 }
 
                 if (nearbyPlaceItems.isEmpty()) {
-                    Log.d("DetailViewModel", "주변 장소가 없습니다.")
                     nearbyPlaceItems.add(NearbyPlaceItem.Title("주변 추천 장소"))
                     nearbyPlaceItems.add(NearbyPlaceItem.PlaceList(emptyList()))
                 }
 
                 _nearbyPlaces.value = nearbyPlaceItems
-                Log.d("DetailViewModel", "주변 장소 정보 요청 성공: ${nearbyPlaceItems.size}개 아이템")
-
             } catch (e: Exception) {
                 Log.e("DetailViewModel", "주변 장소 정보 요청 실패: ${e.message}", e)
             }

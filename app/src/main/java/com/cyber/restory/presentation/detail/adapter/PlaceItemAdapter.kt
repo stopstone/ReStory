@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cyber.restory.data.model.LocationBasedTourItem
 import com.cyber.restory.databinding.ItemNearbyPlaceBinding
+import com.cyber.restory.utils.formatDistance
+import com.cyber.restory.utils.loadImage
 
 class PlaceItemAdapter : ListAdapter<LocationBasedTourItem, PlaceItemAdapter.ViewHolder>(DiffCallback()) {
 
@@ -21,18 +23,11 @@ class PlaceItemAdapter : ListAdapter<LocationBasedTourItem, PlaceItemAdapter.Vie
 
     class ViewHolder private constructor(private val binding: ItemNearbyPlaceBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: LocationBasedTourItem) {
-            binding.tvTitle.text = item.title
-            binding.tvDistance.text = formatDistance(item.dist.toDoubleOrNull() ?: 0.0)
-            binding.tvAddress.text = item.addr1
-            Glide.with(binding.root.context)
-                .load(item.firstimage)
-                .into(binding.ivPlace)
-        }
-
-        private fun formatDistance(distanceInMeters: Double): String {
-            return when {
-                distanceInMeters < 1000 -> "${distanceInMeters.toInt()}m"
-                else -> String.format("%.1fkm", distanceInMeters / 1000)
+            with(binding) {
+                binding.tvTitle.text = item.title
+                binding.tvDistance.text = item.dist.toDoubleOrNull()?.formatDistance()
+                binding.tvAddress.text = item.addr1
+                ivPlace.loadImage(item.firstimage)
             }
         }
 

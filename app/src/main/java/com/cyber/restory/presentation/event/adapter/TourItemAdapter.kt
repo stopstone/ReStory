@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.cyber.restory.data.model.GreenTourItem
 import com.cyber.restory.data.model.LocationBasedTourItem
 import com.cyber.restory.databinding.ItemEventBannerBinding
+import com.cyber.restory.utils.loadImage
 
 sealed class TourItem {
     data class GreenTour(val item: GreenTourItem) : TourItem()
@@ -58,15 +59,7 @@ class TourItemAdapter : ListAdapter<TourItem, TourItemAdapter.ViewHolder>(DiffCa
             binding.apply {
                 tvEventBannerTitle.text = item.title
                 tvEventBannerSubtitle.text = "${item.addr1} ${item.addr2}"
-                Glide.with(itemView.context)
-                    .load(item.firstimage)
-                    .centerCrop()
-                    .into(ivEventBannerImage)
-
-                root.setOnClickListener {
-                    // LocationBasedTourItem에는 URL이 없으므로, 다른 동작을 수행하거나 아무 동작도 하지 않습니다.
-                    // 예를 들어, 상세 정보 화면으로 이동하는 등의 동작을 추가할 수 있습니다.
-                }
+                ivEventBannerImage.loadImage(item.firstimage)
             }
         }
 

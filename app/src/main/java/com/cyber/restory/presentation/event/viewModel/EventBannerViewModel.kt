@@ -39,15 +39,11 @@ class EventBannerViewModel @Inject constructor(
     private var currentBannerPosition: Int = -1
 
     fun initializeWithSeoul(bannerPosition: Int) {
-        Log.d("EventBannerViewModel", "서울로 초기화 시작: 배너 위치 = $bannerPosition")
         currentBannerPosition = bannerPosition
         viewModelScope.launch {
             _isLoading.value = true
             try {
                 getCityFiltersWithCount()
-                val seoul = _cityFilters.value.find { it.code == "SEOUL" }
-                Log.d("EventBannerViewModel", "서울 지역 정보: ${seoul?.name}, 초기 cnt: ${seoul?.cnt}")
-                seoul?.let { setSelectedRegion(it) }
             } finally {
                 _isLoading.value = false
             }
@@ -56,7 +52,6 @@ class EventBannerViewModel @Inject constructor(
 
     private suspend fun getCityFiltersWithCount() {
         try {
-            Log.d("EventBannerViewModel", "도시 필터와 카운트 가져오기 시작")
             val filters = getCityFiltersUseCase()
             val regionsWithCount = filters.map { filter ->
                 viewModelScope.async {
@@ -70,8 +65,8 @@ class EventBannerViewModel @Inject constructor(
             }.map { it.await() }
 
             _cityFilters.value = regionsWithCount
-            Log.d("EventBannerViewModel", "도시 필터와 카운트 가져오기 성공: ${regionsWithCount.size}개의 필터")
-            regionsWithCount.forEach { Log.d("EventBannerViewModel", "지역: ${it.name}, 초기 cnt: ${it.cnt}") }
+            val seoul = _cityFilters.value.find { it.code == "SEOUL" }
+            seoul?.let { setSelectedRegion(it) }
         } catch (e: Exception) {
             Log.e("EventBannerViewModel", "도시 필터와 카운트 가져오기 실패: ${e.message}")
         }
@@ -103,13 +98,11 @@ class EventBannerViewModel @Inject constructor(
             )
             response.response.body.items.item.size
         } catch (e: Exception) {
-            Log.e("EventBannerViewModel", "위치 기반 관광 정보 카운트 가져오기 실패: ${e.message}")
             0
         }
     }
 
     fun setSelectedRegion(region: Region) {
-        Log.d("EventBannerViewModel", "선택된 지역 설정: ${region.name}, 현재 cnt: ${region.cnt}")
         _selectedRegion.value = region
         viewModelScope.launch {
             _isLoading.value = true
@@ -128,17 +121,10 @@ class EventBannerViewModel @Inject constructor(
     private fun getGreenTourInfo(region: Region) {
         viewModelScope.launch {
             try {
-                Log.d("EventBannerViewModel", "녹색 관광 정보 요청 시작: 지역 = ${region.name}")
                 val response = getGreenTourInfoUseCase(region)
                 val items = response.response.body.itemsWrapper?.items
 
-                Log.d(
-                    "EventBannerViewModel",
-                    "녹색 관광 정보 응답 수신: 총 항목 수 = ${response.response.body.totalCount}, 수신된 항목 수 = ${items?.size ?: 0}"
-                )
-
                 if (items.isNullOrEmpty()) {
-                    Log.w("EventBannerViewModel", "수신된 녹색 관광 정보가 없습니다.")
                     _tourItems.value = emptyList()
                 } else {
                     val filteredItems = items.filter { item ->
@@ -146,15 +132,9 @@ class EventBannerViewModel @Inject constructor(
                                 item.summary.contains("https://", ignoreCase = true)
                     }
                     _tourItems.value = filteredItems.map { TourItem.GreenTour(it) }
-                    Log.d(
-                        "EventBannerViewModel",
-                        "녹색 관광 정보 필터링 완료: 원본 ${items.size}개 중 ${filteredItems.size}개 항목 선택"
-                    )
                 }
-
-                Log.d("EventBannerViewModel", "녹색 관광 정보 처리 완료: 최종 ${_tourItems.value.size}개 항목")
             } catch (e: Exception) {
-                Log.e("EventBannerViewModel", "녹색 관광 정보 요청 실패: ${e.message}", e)
+                // 공통화
                 _tourItems.value = emptyList()
             }
         }
@@ -163,13 +143,10 @@ class EventBannerViewModel @Inject constructor(
     private fun getLocationBasedTourInfo(region: Region, contentTypeId: String) {
         viewModelScope.launch {
             try {
-                Log.d(
-                    "EventBannerViewModel",
-                    "위치 기반 관광 정보 요청 시작: 지역 = ${region.name}, 컨텐츠 타입 = $contentTypeId"
-                )
                 val regionCode = RegionCode.fromDescription(region.name)
                     ?: throw IllegalArgumentException("잘못된 지역명: ${region.name}")
 
+                // 공통화
                 val response = getLocationBasedTourInfoUseCase(
                     regionCode.longitude.toString(),
                     regionCode.latitude.toString(),
@@ -178,10 +155,7 @@ class EventBannerViewModel @Inject constructor(
                 )
                 _tourItems.value =
                     response.response.body.items.item.map { TourItem.LocationBasedTour(it) }
-
-                Log.d("EventBannerViewModel", "위치 기반 관광 정보 요청 성공: ${_tourItems.value.size}개의 항목")
             } catch (e: Exception) {
-                Log.e("EventBannerViewModel", "위치 기반 관광 정보 요청 실패: ${e.message}")
                 _tourItems.value = emptyList()
             }
         }

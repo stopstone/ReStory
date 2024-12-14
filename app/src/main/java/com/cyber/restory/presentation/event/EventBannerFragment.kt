@@ -1,5 +1,6 @@
 package com.cyber.restory.presentation.event
 
+import android.content.Context
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -36,36 +37,37 @@ class EventBannerFragment : Fragment() {
     private val viewModel: EventBannerViewModel by viewModels()
     private val args: EventBannerFragmentArgs by navArgs()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        Log.d("EventBannerFragment", "onCreateView 호출")
+    private lateinit var appContext: Context
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        appContext = context
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentEventBannerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("EventBannerFragment", "onViewCreated 시작")
         setLayout()
         observeViewModel()
         setupBackButton()
 
         viewModel.initializeWithSeoul(args.bannerPosition)
-
-        when (args.bannerPosition) {
-            0 -> Log.d("EventBannerFragment", "첫 번째 배너 클릭 (녹색 관광)")
-            1 -> Log.d("EventBannerFragment", "두 번째 배너 클릭 (위치 기반 관광)")
-            2 -> Log.d("EventBannerFragment", "세 번째 배너 클릭 (축제공연행사)")
-        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        Log.d("EventBannerFragment", "onDestroyView 호출")
     }
 
     private fun setLayout() {
-        Log.d("EventBannerFragment", "레이아웃 설정 시작")
         with(binding) {
             setEventBannerRecyclerView()
             setRegionRecyclerView()
@@ -74,26 +76,21 @@ class EventBannerFragment : Fragment() {
             rvRegionList.visibility = View.GONE
             loadingView.visibility = View.GONE
         }
-        Log.d("EventBannerFragment", "레이아웃 설정 완료")
     }
 
     private fun setEventBannerRecyclerView() {
-        Log.d("EventBannerFragment", "이벤트 배너 RecyclerView 설정 시작")
         with(binding.rvEventBannerList) {
             adapter = tourItemAdapter
             itemAnimator = null
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = LinearLayoutManager(appContext)
         }
-        Log.d("EventBannerFragment", "이벤트 배너 RecyclerView 설정 완료")
     }
 
     private fun setRegionRecyclerView() {
-        Log.d("EventBannerFragment", "지역 RecyclerView 설정 시작")
         with(binding.rvRegionList) {
             adapter = regionAdapter
-            layoutManager = GridLayoutManager(requireContext(), 4)
+            layoutManager = GridLayoutManager(appContext, 4)
         }
-        Log.d("EventBannerFragment", "지역 RecyclerView 설정 완료")
     }
 
     private fun createColoredRegionText(region: String): SpannableString {
@@ -102,12 +99,11 @@ class EventBannerFragment : Fragment() {
         val startIndex = 0
         val endIndex = region.length
         spannableString.setSpan(
-            ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.blue_500)),
+            ForegroundColorSpan(ContextCompat.getColor(appContext, R.color.blue_500)),
             startIndex,
             endIndex,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
-        Log.d("EventBannerFragment", "색상이 적용된 지역 텍스트 생성: $fullText")
         return spannableString
     }
 
@@ -124,7 +120,6 @@ class EventBannerFragment : Fragment() {
 
                 launch {
                     viewModel.cityFilters.collect { regions ->
-                        Log.d("EventBannerFragment", "새로운 지역 목록 수신: ${regions.size}개의 지역")
                         regionAdapter.submitList(regions)
                     }
                 }
@@ -132,7 +127,6 @@ class EventBannerFragment : Fragment() {
                 launch {
                     viewModel.selectedRegion.collect { region ->
                         region?.let {
-                            Log.d("EventBannerFragment", "선택된 지역 변경: ${it.name}")
                             binding.tvEventBannerTitle.text = createColoredRegionText(it.name)
                             regionAdapter.setSelectedRegion(it)
                         }
@@ -141,36 +135,30 @@ class EventBannerFragment : Fragment() {
 
                 launch {
                     viewModel.tourItems.collect { items ->
-                        Log.d("EventBannerFragment", "관광 정보 수신: ${items.size}개 항목")
                         tourItemAdapter.submitList(items)
                     }
                 }
             }
         }
-        Log.d("EventBannerFragment", "ViewModel 관찰 설정 완료")
     }
 
 
     private fun setupBackButton() {
         binding.btnBack.setOnClickListener {
-            Log.d("EventBannerFragment", "백 버튼 클릭")
             findNavController().navigateUp()
         }
     }
 
     private fun toggleRegionList() {
         binding.rvRegionList.visibility = if (binding.rvRegionList.visibility == View.VISIBLE) {
-            Log.d("EventBannerFragment", "지역 목록 숨김")
             View.GONE
         } else {
-            Log.d("EventBannerFragment", "지역 목록 표시")
             View.VISIBLE
         }
     }
 
     private fun onRegionSelected(region: Region) {
         toggleRegionList()
-        Log.d("EventBannerFragment", "선택된 지역: ${region.name}")
         viewModel.setSelectedRegion(region)
     }
 }

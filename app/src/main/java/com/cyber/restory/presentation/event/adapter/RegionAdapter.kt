@@ -22,17 +22,19 @@ class RegionAdapter(private val onItemClick: (Region) -> Unit) :
         holder.bind(getItem(position), position == selectedPosition)
     }
 
-    inner class RegionViewHolder(private val binding: ItemRegionBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class RegionViewHolder(
+        private val binding: ItemRegionBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(region: Region, isSelected: Boolean) {
-            binding.tvRegionName.text = region.name
-            binding.tvRegionName.isSelected = isSelected
-            binding.tvRegionCount.text = "(${region.cnt})"
-            itemView.setOnClickListener {
-                val previousSelected = selectedPosition
-                selectedPosition = adapterPosition
-                notifyItemChanged(previousSelected)
-                notifyItemChanged(selectedPosition)
-                onItemClick(region)
+            with(binding) {
+                tvRegionName.text = region.name
+                tvRegionName.isSelected = isSelected
+                tvRegionCount.text = "(${region.cnt})"
+                itemView.setOnClickListener {
+                    selectedPosition = adapterPosition
+                    notifyItemChanged(selectedPosition)
+                    onItemClick(region)
+                }
             }
         }
     }
@@ -40,9 +42,7 @@ class RegionAdapter(private val onItemClick: (Region) -> Unit) :
     fun setSelectedRegion(region: Region) {
         val position = currentList.indexOfFirst { it.code == region.code }
         if (position != RecyclerView.NO_POSITION) {
-            val previousSelected = selectedPosition
             selectedPosition = position
-            notifyItemChanged(previousSelected)
             notifyItemChanged(selectedPosition)
         }
     }

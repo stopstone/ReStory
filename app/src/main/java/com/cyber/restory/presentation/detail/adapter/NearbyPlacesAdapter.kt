@@ -35,7 +35,7 @@ class NearbyPlacesAdapter : ListAdapter<NearbyPlaceItem, RecyclerView.ViewHolder
         }
     }
 
-    class TitleViewHolder private constructor(private val binding: ItemNearbyPlaceTitleBinding) : RecyclerView.ViewHolder(binding.root) {
+    class TitleViewHolder(private val binding: ItemNearbyPlaceTitleBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: NearbyPlaceItem.Title) {
             binding.tvTitle.text = item.title
         }
