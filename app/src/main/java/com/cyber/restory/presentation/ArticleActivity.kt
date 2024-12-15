@@ -26,6 +26,10 @@ class ArticleActivity : AppCompatActivity() {
                 binding.btnShare.setImageResource(R.drawable.ic_share_detail)
             }
         }
+
+        binding.toolbar.setNavigationOnClickListener {
+            finish()
+        }
     }
 
 }

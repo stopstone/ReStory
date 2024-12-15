@@ -21,6 +21,7 @@ import com.cyber.restory.data.model.Post
 import com.cyber.restory.databinding.ActivityDetailBinding
 import com.cyber.restory.presentation.detail.adapter.NearbyPlacesAdapter
 import com.cyber.restory.presentation.detail.viewmodel.DetailViewModel
+import com.cyber.restory.utils.loadImage
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -32,9 +33,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DetailActivity : AppCompatActivity() {
-    private val binding: ActivityDetailBinding by lazy {
-        ActivityDetailBinding.inflate(layoutInflater)
-    }
+    private val binding: ActivityDetailBinding by lazy { ActivityDetailBinding.inflate(layoutInflater) }
     private var mapView: MapView? = null
     private var kakaoMap: KakaoMap? = null
 
@@ -54,6 +53,21 @@ class DetailActivity : AppCompatActivity() {
         viewModel.initializeWithPostId(args.postId)
 
         observeViewModel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView?.resume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView?.pause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView?.finish()
     }
 
     private fun setupRecyclerView() {
@@ -92,15 +106,8 @@ class DetailActivity : AppCompatActivity() {
             tvArticleDetailBehindText.text = post.subContent
 
             if (post.postImages.isNotEmpty()) {
-                Glide.with(this@DetailActivity)
-                    .load(post.postImages[0].imageUrl)
-                    .into(ivArticleDetailImage)
-
-                Glide.with(this@DetailActivity)
-                    .load(post?.postImages?.get(0)?.imageUrl)
-                    .error(R.drawable.ic_empty)
-                    .centerCrop()
-                    .into(ivArticleDetailBehindImage)
+                ivArticleDetailImage.loadImage(post.postImages[0].imageUrl)
+                ivArticleDetailBehindImage.loadImage(post.postImages[0].imageUrl)
             }
         }
     }
@@ -124,9 +131,7 @@ class DetailActivity : AppCompatActivity() {
             tvArticleDetailTelephone.setOnClickListener { openDialer(binding.tvArticleDetailTelephone.text.toString()) }
             tvArticleDetailHomepage.setOnClickListener { openWebPage(binding.tvArticleDetailHomepage.text.toString()) }
 
-            toolbar.setNavigationOnClickListener {
-                finish()
-            }
+            toolbar.setNavigationOnClickListener { finish() }
 
             btnArticleDetailMapCopy.setOnClickListener {
                 copyTextToClipboard(tvArticleDetailMapText.text.toString())
@@ -135,18 +140,19 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun openDialer(phoneNumber: String) {
-        val intent = Intent(Intent.ACTION_DIAL).apply {
+        Intent(Intent.ACTION_DIAL).apply {
             data = Uri.parse("tel:$phoneNumber")
+            startActivity(this)
         }
-        startActivity(intent)
     }
 
     private fun openWebPage(url: String) {
         if (url.isNotEmpty()) {
             val fullUrl =
                 if (url.startsWith("http://") || url.startsWith("https://")) url else "http://$url"
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(fullUrl))
-            startActivity(intent)
+            Intent(Intent.ACTION_VIEW, Uri.parse(fullUrl)).apply {
+                startActivity(this)
+            }
         }
     }
 
@@ -154,15 +160,12 @@ class DetailActivity : AppCompatActivity() {
         mapView = binding.mapView
         mapView?.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
-                Log.d("DetailActivity", "지도 API가 정상적으로 종료되었습니다.")
             }
 
             override fun onMapError(error: Exception) {
-                Log.e("DetailActivity", "지도 사용 중 에러 발생: ${error.message}", error)
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(map: KakaoMap) {
-                Log.d("DetailActivity", "KakaoMap 준비 완료")
                 kakaoMap = map
                 showLocationOnMap(post)
             }
@@ -176,21 +179,6 @@ class DetailActivity : AppCompatActivity() {
             map.moveCamera(CameraUpdateFactory.newCenterPosition(location))
             map.moveCamera(CameraUpdateFactory.zoomTo(16))
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mapView?.resume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mapView?.pause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView?.finish()
     }
 
     private fun copyTextToClipboard(text: String) {

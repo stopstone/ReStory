@@ -32,7 +32,7 @@ android {
         buildConfigField("String", "API_KEY", "\"${properties["kakaoapi.key"]}\"")
         buildConfigField("String", "GREEN_TOUR_API_KEY", "\"${properties["greentour.key"]}\"")
 
-        val kakaoApiKey = properties["kakaoapi.key"] as String
+        val kakaoApiKey = properties["kakaoapi.key"] as? String ?: ""
         manifestPlaceholders["KAKAO_API_KEY"] = kakaoApiKey
 
 

@@ -37,12 +37,4 @@ class SettingsItemView @JvmOverloads constructor(
             }
         }
     }
-
-    fun setTitle(title: String) {
-        binding.tvTitle.text = title
-    }
-
-    fun setIcon(icon: Drawable?) {
-        binding.ivIcon.setImageDrawable(icon)
-    }
 }
